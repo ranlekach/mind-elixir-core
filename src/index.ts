@@ -37,6 +37,7 @@ function MindElixir(
     overflowHidden,
     theme,
     alignment,
+    selectionDisabled,
   }: Options
 ): void {
   let ele: HTMLElement | null = null
@@ -77,7 +78,7 @@ function MindElixir(
 
   this.container = $d.createElement('div') // map container
   this.selectionContainer = selectionContainer || this.container
-
+  this.selectionDisabled = selectionDisabled || false
   this.container.className = 'map-container'
 
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')

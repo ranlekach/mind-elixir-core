@@ -66,6 +66,7 @@ export interface KeypressOptions {
  * @public
  */
 export interface MindElixirInstance extends Required<Options>, MindElixirMethods {
+  [x: string]: any
   el: HTMLElement
   disposable: Array<() => void>
   isFocusMode: boolean
@@ -137,6 +138,7 @@ export interface Options {
   theme?: Theme
   selectionContainer?: string | HTMLElement
   alignment?: Alignment
+  selectionDisabled?: boolean
 }
 
 export type Uid = string
