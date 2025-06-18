@@ -66,7 +66,6 @@ export interface KeypressOptions {
  * @public
  */
 export interface MindElixirInstance extends Required<Options>, MindElixirMethods {
-  [x: string]: any
   el: HTMLElement
   disposable: Array<() => void>
   isFocusMode: boolean
