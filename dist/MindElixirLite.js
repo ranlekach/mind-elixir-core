@@ -92,7 +92,7 @@ function U(e, t, n, o) {
 function ee() {
   return ((/* @__PURE__ */ new Date()).getTime().toString(16) + Math.random().toString(16).substr(2)).substr(2, 16);
 }
-const Ne = function() {
+const Ae = function() {
   const e = ee();
   return {
     topic: this.newTopicName,
@@ -399,8 +399,8 @@ const qe = function(e) {
     const y = a.children[0].children[1];
     if (y && (y.style.top = (y.parentNode.offsetHeight - y.offsetHeight) / 2 + "px", f === T.LHS ? y.style.left = "-10px" : y.style.right = "-10px"), e && e !== a)
       continue;
-    const x = W("subLines"), L = a.lastChild;
-    L.tagName === "svg" && L.remove(), a.appendChild(x), Le(this, x, E, a, f, !0);
+    const b = W("subLines"), L = a.lastChild;
+    L.tagName === "svg" && L.remove(), a.appendChild(b), Le(this, b, E, a, f, !0);
   }
   this.renderArrow(), this.renderSummary(), this.bus.fire("linkDiv");
 }, Le = function(e, t, n, o, s, i) {
@@ -411,9 +411,9 @@ const qe = function(e) {
   for (let h = 0; h < l.length; h++) {
     const p = l[h], m = p.firstChild, g = m.offsetTop, f = m.offsetLeft, v = m.offsetWidth, _ = m.offsetHeight, E = m.firstChild.nodeObj.branchColor || n, y = e.generateSubBranch({ pT: c, pL: d, pW: a, pH: u, cT: g, cL: f, cW: v, cH: _, direction: s, isFirst: i });
     t.appendChild(Se(y, E, "2"));
-    const x = m.children[1];
-    if (x) {
-      if (x.style.bottom = -(x.offsetHeight / 2) + "px", s === T.LHS ? x.style.left = "10px" : s === T.RHS && (x.style.right = "10px"), !x.expanded)
+    const b = m.children[1];
+    if (b) {
+      if (b.style.bottom = (b.parentNode.offsetHeight - b.offsetHeight) / 2 + "px", s === T.LHS ? b.style.left = "10px" : s === T.RHS && (b.style.right = "10px"), !b.expanded)
         continue;
     } else
       continue;
@@ -452,10 +452,10 @@ function Ye(e) {
   e.container.append(Ie(e)), e.container.append(Xe(e));
 }
 /*! @viselect/vanilla v3.5.1 MIT | https://github.com/Simonwep/selection/tree/master/packages/vanilla */
-var Ge = Object.defineProperty, Ke = (e, t, n) => t in e ? Ge(e, t, { enumerable: !0, configurable: !0, writable: !0, value: n }) : e[t] = n, b = (e, t, n) => (Ke(e, typeof t != "symbol" ? t + "" : t, n), n);
+var Ge = Object.defineProperty, Ke = (e, t, n) => t in e ? Ge(e, t, { enumerable: !0, configurable: !0, writable: !0, value: n }) : e[t] = n, x = (e, t, n) => (Ke(e, typeof t != "symbol" ? t + "" : t, n), n);
 class Je {
   constructor() {
-    b(this, "_listeners", /* @__PURE__ */ new Map()), b(this, "on", this.addEventListener), b(this, "off", this.removeEventListener), b(this, "emit", this.dispatchEvent);
+    x(this, "_listeners", /* @__PURE__ */ new Map()), x(this, "on", this.addEventListener), x(this, "off", this.removeEventListener), x(this, "emit", this.dispatchEvent);
   }
   addEventListener(t, n) {
     const o = this._listeners.get(t) ?? /* @__PURE__ */ new Set();
@@ -476,7 +476,7 @@ class Je {
   }
 }
 const ue = (e, t = "px") => typeof e == "number" ? e + t : e;
-function N({ style: e }, t, n) {
+function A({ style: e }, t, n) {
   if (typeof t == "object")
     for (const [o, s] of Object.entries(t))
       s !== void 0 && (e[o] = ue(s));
@@ -553,7 +553,7 @@ const { abs: P, max: pe, min: me, ceil: ge } = Math;
 class tt extends Je {
   constructor(t) {
     var n, o, s, i, r;
-    super(), b(this, "_options"), b(this, "_selection", {
+    super(), x(this, "_options"), x(this, "_selection", {
       stored: [],
       selected: [],
       touched: [],
@@ -563,7 +563,7 @@ class tt extends Je {
         removed: []
         // Removed elements since last selection
       }
-    }), b(this, "_area"), b(this, "_clippingElement"), b(this, "_targetElement"), b(this, "_targetRect"), b(this, "_selectables", []), b(this, "_latestElement"), b(this, "_areaRect", new DOMRect()), b(this, "_areaLocation", { y1: 0, x2: 0, y2: 0, x1: 0 }), b(this, "_singleClick", !0), b(this, "_frame"), b(this, "_scrollAvailable", !0), b(this, "_scrollingActive", !1), b(this, "_scrollSpeed", { x: 0, y: 0 }), b(this, "_scrollDelta", { x: 0, y: 0 }), b(this, "disable", this._bindStartEvents.bind(this, !1)), b(this, "enable", this._bindStartEvents), this._options = {
+    }), x(this, "_area"), x(this, "_clippingElement"), x(this, "_targetElement"), x(this, "_targetRect"), x(this, "_selectables", []), x(this, "_latestElement"), x(this, "_areaRect", new DOMRect()), x(this, "_areaLocation", { y1: 0, x2: 0, y2: 0, x1: 0 }), x(this, "_singleClick", !0), x(this, "_frame"), x(this, "_scrollAvailable", !0), x(this, "_scrollingActive", !1), x(this, "_scrollSpeed", { x: 0, y: 0 }), x(this, "_scrollDelta", { x: 0, y: 0 }), x(this, "disable", this._bindStartEvents.bind(this, !1)), x(this, "enable", this._bindStartEvents), this._options = {
       selectionAreaClass: "selection-area",
       selectionContainerClass: void 0,
       selectables: [],
@@ -603,12 +603,12 @@ class tt extends Je {
     for (const a of Object.getOwnPropertyNames(Object.getPrototypeOf(this)))
       typeof this[a] == "function" && (this[a] = this[a].bind(this));
     const { document: l, selectionAreaClass: c, selectionContainerClass: d } = this._options;
-    this._area = l.createElement("div"), this._clippingElement = l.createElement("div"), this._clippingElement.appendChild(this._area), this._area.classList.add(c), d && this._clippingElement.classList.add(d), N(this._area, {
+    this._area = l.createElement("div"), this._clippingElement = l.createElement("div"), this._clippingElement.appendChild(this._area), this._area.classList.add(c), d && this._clippingElement.classList.add(d), A(this._area, {
       willChange: "top, left, bottom, right, width, height",
       top: 0,
       left: 0,
       position: "fixed"
-    }), N(this._clippingElement, {
+    }), A(this._clippingElement, {
       overflow: "hidden",
       position: "fixed",
       transform: "translate3d(0, 0, 0)",
@@ -680,26 +680,26 @@ class tt extends Je {
         k(o, ["mouseup", "touchcancel", "touchend"], this._onTapStop);
         return;
       }
-      z(o, ["mousemove", "touchmove"], this._onTapMove, { passive: !1 }), N(this._area, "display", "block"), O(n, o)[0].appendChild(this._clippingElement), this.resolveSelectables(), this._singleClick = !1, this._targetRect = this._targetElement.getBoundingClientRect(), this._scrollAvailable = this._targetElement.scrollHeight !== this._targetElement.clientHeight || this._targetElement.scrollWidth !== this._targetElement.clientWidth, this._scrollAvailable && (z(this._targetElement, "wheel", this._manualScroll, { passive: !1 }), this._selectables = this._selectables.filter((d) => this._targetElement.contains(d))), this._setupSelectionArea(), this._emitEvent("start", t), this._onTapMove(t);
+      z(o, ["mousemove", "touchmove"], this._onTapMove, { passive: !1 }), A(this._area, "display", "block"), O(n, o)[0].appendChild(this._clippingElement), this.resolveSelectables(), this._singleClick = !1, this._targetRect = this._targetElement.getBoundingClientRect(), this._scrollAvailable = this._targetElement.scrollHeight !== this._targetElement.clientHeight || this._targetElement.scrollWidth !== this._targetElement.clientWidth, this._scrollAvailable && (z(this._targetElement, "wheel", this._manualScroll, { passive: !1 }), this._selectables = this._selectables.filter((d) => this._targetElement.contains(d))), this._setupSelectionArea(), this._emitEvent("start", t), this._onTapMove(t);
     }
     this._handleMoveEvent(t);
   }
   _setupSelectionArea() {
     const { _clippingElement: t, _targetElement: n, _area: o } = this, s = this._targetRect = n.getBoundingClientRect();
-    this._scrollAvailable ? (N(t, {
+    this._scrollAvailable ? (A(t, {
       top: s.top,
       left: s.left,
       width: s.width,
       height: s.height
-    }), N(o, {
+    }), A(o, {
       marginTop: -s.top,
       marginLeft: -s.left
-    })) : (N(t, {
+    })) : (A(t, {
       top: 0,
       left: 0,
       width: "100%",
       height: "100%"
-    }), N(o, {
+    }), A(o, {
       marginTop: 0,
       marginLeft: 0
     }));
@@ -738,8 +738,8 @@ class tt extends Je {
     let { x2: g, y2: f } = n;
     const { behaviour: { scrolling: { startScrollMargins: v } } } = i;
     g < h.left + v.x ? (t.x = d ? -P(h.left - g + v.x) : 0, g = g < h.left ? h.left : g) : g > h.right - v.x ? (t.x = a - d - u ? P(h.left + h.width - g - v.x) : 0, g = g > h.right ? h.right : g) : t.x = 0, f < h.top + v.y ? (t.y = r ? -P(h.top - f + v.y) : 0, f = f < h.top ? h.top : f) : f > h.bottom - v.y ? (t.y = l - r - c ? P(h.top + h.height - f - v.y) : 0, f = f > h.bottom ? h.bottom : f) : t.y = 0;
-    const _ = me(p, g), E = me(m, f), y = pe(p, g), x = pe(m, f);
-    o.x = _, o.y = E, o.width = y - _, o.height = x - E;
+    const _ = me(p, g), E = me(m, f), y = pe(p, g), b = pe(m, f);
+    o.x = _, o.y = E, o.width = y - _, o.height = b - E;
   }
   _redrawSelectionArea() {
     const { x: t, y: n, width: o, height: s } = this._areaRect, { style: i } = this._area;
@@ -748,7 +748,7 @@ class tt extends Je {
   _onTapStop(t, n) {
     var o;
     const { document: s, features: i } = this._options, { _singleClick: r } = this;
-    k(s, ["mousemove", "touchmove"], this._delayedTapMove), k(s, ["touchmove", "mousemove"], this._onTapMove), k(s, ["mouseup", "touchcancel", "touchend"], this._onTapStop), k(s, "scroll", this._onScroll), this._keepSelection(), t && r && i.singleTap.allow ? this._onSingleTap(t) : !r && !n && (this._updateElementSelection(), this._emitEvent("stop", t)), this._scrollSpeed.x = 0, this._scrollSpeed.y = 0, k(this._targetElement, "wheel", this._manualScroll, { passive: !0 }), this._clippingElement.remove(), (o = this._frame) == null || o.cancel(), N(this._area, "display", "none");
+    k(s, ["mousemove", "touchmove"], this._delayedTapMove), k(s, ["touchmove", "mousemove"], this._onTapMove), k(s, ["mouseup", "touchcancel", "touchend"], this._onTapStop), k(s, "scroll", this._onScroll), this._keepSelection(), t && r && i.singleTap.allow ? this._onSingleTap(t) : !r && !n && (this._updateElementSelection(), this._emitEvent("stop", t)), this._scrollSpeed.x = 0, this._scrollSpeed.y = 0, k(this._targetElement, "wheel", this._manualScroll, { passive: !0 }), this._clippingElement.remove(), (o = this._frame) == null || o.cancel(), A(this._area, "display", "none");
   }
   _updateElementSelection() {
     const { _selectables: t, _options: n, _selection: o, _areaRect: s } = this, { stored: i, selected: r, touched: l } = o, { intersect: c, overlap: d } = n.behaviour, a = d === "invert", u = [], h = [], p = [];
@@ -893,7 +893,7 @@ class tt extends Je {
     ), this._latestElement = void 0, n || (this._emitEvent("move", null), this._emitEvent("stop", null)));
   }
 }
-b(tt, "version", "3.5.1");
+x(tt, "version", "3.5.1");
 const nt = function(e, t = !0) {
   this.theme = e;
   const n = this.theme.cssVar, o = Object.keys(n);
@@ -1093,8 +1093,8 @@ const Tt = function(e, t, n, o) {
     const L = U(d, a, l, c);
     v = `M ${L.x1} ${L.y1} L ${l} ${c} L ${L.x2} ${L.y2}`;
   }
-  const _ = We(`M ${l} ${c} C ${d} ${a} ${u} ${h} ${p} ${m}`, f, v), E = l / 8 + d * 3 / 8 + u * 3 / 8 + p / 8, y = c / 8 + a * 3 / 8 + h * 3 / 8 + m / 8, x = Tt(o.label, E, y, e.theme.cssVar["--color"]);
-  _.appendChild(x), _.arrowObj = o, _.dataset.linkid = o.id, e.linkSvgGroup.appendChild(_), s || (e.arrows.push(o), e.currentArrow = _, Ae(e, o, i, r)), performance.now();
+  const _ = We(`M ${l} ${c} C ${d} ${a} ${u} ${h} ${p} ${m}`, f, v), E = l / 8 + d * 3 / 8 + u * 3 / 8 + p / 8, y = c / 8 + a * 3 / 8 + h * 3 / 8 + m / 8, b = Tt(o.label, E, y, e.theme.cssVar["--color"]);
+  _.appendChild(b), _.arrowObj = o, _.dataset.linkid = o.id, e.linkSvgGroup.appendChild(_), s || (e.arrows.push(o), e.currentArrow = _, Ne(e, o, i, r)), performance.now();
 }, $t = function(e, t, n = {}) {
   const o = {
     id: ee(),
@@ -1115,7 +1115,7 @@ const Tt = function(e, t, n, o) {
     name: "createArrow",
     obj: o
   });
-}, At = function(e) {
+}, Nt = function(e) {
   let t;
   if (e ? t = e : t = this.currentArrow, !t)
     return;
@@ -1127,16 +1127,16 @@ const Tt = function(e, t, n, o) {
       id: n
     }
   });
-}, Nt = function(e) {
+}, At = function(e) {
   this.currentArrow = e;
   const t = e.arrowObj, n = M(t.from), o = M(t.to), s = Z(this, n, t.delta1), i = Z(this, o, t.delta2);
-  Ae(this, t, s, i);
+  Ne(this, t, s, i);
 }, kt = function() {
   this.currentArrow = null, se(this);
 }, se = function(e) {
   var t, n;
   (t = e.helper1) == null || t.destory(e.map), (n = e.helper2) == null || n.destory(e.map), e.linkController.style.display = "none", e.P2.style.display = "none", e.P3.style.display = "none";
-}, Ae = function(e, t, n, o) {
+}, Ne = function(e, t, n, o) {
   e.linkController.style.display = "initial", e.P2.style.display = "initial", e.P3.style.display = "initial", e.nodes.appendChild(e.linkController), e.nodes.appendChild(e.P2), e.nodes.appendChild(e.P3);
   let { x: s, y: i } = j(n), { ctrlX: r, ctrlY: l } = n, { ctrlX: c, ctrlY: d } = o, { x: a, y: u } = j(o);
   e.P2.style.cssText = `top:${l}px;left:${r}px;`, e.P3.style.cssText = `top:${d}px;left:${c}px;`, w(e.line1, {
@@ -1218,9 +1218,9 @@ const Bt = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   createArrow: $t,
   editArrowLabel: Dt,
-  removeArrow: At,
+  removeArrow: Nt,
   renderArrow: Ht,
-  selectArrow: Nt,
+  selectArrow: At,
   tidyArrow: Pt,
   unselectArrow: kt
 }, Symbol.toStringTag, { value: "Module" })), zt = function(e) {
@@ -1294,18 +1294,18 @@ const Bt = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   var L;
   const { id: n, text: o, parent: s, start: i, end: r } = t, l = e.nodes, d = M(s).nodeObj, a = Rt(t);
   let u = 1 / 0, h = 0, p = 0, m = 0;
-  for (let A = i; A <= r; A++) {
-    const re = (L = d.children) == null ? void 0 : L[A];
+  for (let N = i; N <= r; N++) {
+    const re = (L = d.children) == null ? void 0 : L[N];
     if (!re)
       return e.removeSummary(n), null;
     const I = jt(re.id), { offsetLeft: X, offsetTop: le } = D(l, I), ce = i === r ? 10 : 20;
-    A === i && (p = le + ce), A === r && (m = le + I.offsetHeight - ce), X < u && (u = X), I.offsetWidth + X > h && (h = I.offsetWidth + X);
+    N === i && (p = le + ce), N === r && (m = le + I.offsetHeight - ce), X < u && (u = X), I.offsetWidth + X > h && (h = I.offsetWidth + X);
   }
   let g, f;
   const v = p + 10, _ = m + 10, E = (v + _) / 2, y = e.theme.cssVar["--color"];
   a === T.LHS ? (g = ye(`M ${u + 10} ${v} c -5 0 -10 5 -10 10 L ${u} ${_ - 10} c 0 5 5 10 10 10 M ${u} ${E} h -10`, y), f = be(o, u - 20, E + 6, "end", y)) : (g = ye(`M ${h - 10} ${v} c 5 0 10 5 10 10 L ${h} ${_ - 10} c 0 5 -5 10 -10 10 M ${h} ${E} h 10`, y), f = be(o, h + 20, E + 6, "start", y));
-  const x = Ot("s-" + n);
-  return x.appendChild(g), x.appendChild(f), x.summaryObj = t, e.summarySvg.appendChild(x), x;
+  const b = Ot("s-" + n);
+  return b.appendChild(g), b.appendChild(f), b.summaryObj = t, e.summarySvg.appendChild(b), b;
 }, qt = function() {
   let e = [];
   this.currentNode ? e = [this.currentNode] : this.currentNodes && (e = this.currentNodes);
@@ -1533,7 +1533,7 @@ const ln = function(e = !1, t) {
   exportSvg: ln
 }, Symbol.toStringTag, { value: "Module" })), hn = {}, dn = {
   getObjById: J,
-  generateNewObj: Ne,
+  generateNewObj: Ae,
   layout: De,
   linkDiv: Fe,
   editTopic: qe,
@@ -1569,11 +1569,11 @@ function un({ pT: e, pL: t, pW: n, pH: o, cT: s, cL: i, cW: r, cH: l, direction:
 function fn({ pT: e, pL: t, pW: n, pH: o, cT: s, cL: i, cW: r, cH: l, direction: c, isFirst: d }) {
   const a = parseInt(this.container.style.getPropertyValue("--gap"));
   let u = 0, h = 0;
-  d ? u = e + o / 2 : u = e + o;
-  const p = s + l;
+  u = e + o / 2;
+  const p = s + l / 2;
   let m = 0, g = 0, f = 0;
   const v = Math.abs(u - p) / 300 * a;
-  return c === T.LHS ? (f = t, m = f + a, g = f - a, h = i + a, `M ${m} ${u} C ${f} ${u} ${f + v} ${p} ${g} ${p} H ${h}`) : (f = t + n, m = f - a, g = f + a, h = i + r - a, `M ${m} ${u} C ${f} ${u} ${f - v} ${p} ${g} ${p} H ${h}`);
+  return c === T.LHS ? (f = t, m = f + a + v, g = f - a - v, h = i + r - a, `M ${m} ${u} C ${f} ${u} ${f + v} ${p} ${g} ${p} H ${h}`) : (f = t + n, m = f - a, g = f + a, h = i + a, `M ${m} ${u} C ${f} ${u} ${f - v} ${p} ${g} ${p} H ${h}`);
 }
 const pn = "4.6.1", V = document;
 function $({
@@ -1599,14 +1599,14 @@ function $({
   selectionDisabled: E
 }) {
   let y = null;
-  const x = Object.prototype.toString.call(e);
-  if (x === "[object HTMLDivElement]" ? y = e : x === "[object String]" && (y = document.querySelector(e)), !y)
+  const b = Object.prototype.toString.call(e);
+  if (b === "[object HTMLDivElement]" ? y = e : b === "[object String]" && (y = document.querySelector(e)), !y)
     throw new Error("MindElixir: el is not a valid element");
   y.style.position = "relative", y.innerHTML = "", this.el = y, this.disposable = [], this.before = a || {}, this.locale = n || "en", this.contextMenu = i === void 0 ? !0 : i, this.toolBar = r === void 0 ? !0 : r, this.keypress = l === void 0 ? !0 : l, this.mouseSelectionButton = c || 0, this.direction = typeof t == "number" ? t : 1, this.draggable = o === void 0 ? !0 : o, this.newTopicName = u || "new node", this.editable = s === void 0 ? !0 : s, this.allowUndo = h === void 0 ? !1 : h, this.scaleSensitivity = typeof _ == "number" ? _ : 0.2, this.currentNode = null, this.currentArrow = null, this.scaleVal = 1, this.tempDirection = null, this.generateMainBranch = p || un, this.generateSubBranch = m || fn, this.overflowHidden = g || !1, this.bus = He.create(), this.container = V.createElement("div"), this.selectionContainer = d || this.container, this.selectionDisabled = E || !1, this.container.className = "map-container";
   const L = window.matchMedia("(prefers-color-scheme: dark)");
   this.theme = f || (L.matches ? we : xe);
-  const A = V.createElement("div");
-  A.className = "map-canvas", this.map = A, this.map.setAttribute("tabindex", "0"), this.container.appendChild(this.map), this.el.appendChild(this.container), this.nodes = V.createElement("me-nodes"), this.nodes.className = "main-node-container", this.lines = W("lines"), this.summarySvg = W("summary"), this.linkController = W("linkcontroller"), this.P2 = V.createElement("div"), this.P3 = V.createElement("div"), this.P2.className = this.P3.className = "circle", this.P2.style.display = this.P3.style.display = "none", this.line1 = de(), this.line2 = de(), this.linkController.appendChild(this.line1), this.linkController.appendChild(this.line2), this.linkSvgGroup = W("topiclinks"), this.alignment = v ?? "root", this.map.appendChild(this.nodes), this.overflowHidden ? this.container.style.overflow = "hidden" : ke(this);
+  const N = V.createElement("div");
+  N.className = "map-canvas", this.map = N, this.map.setAttribute("tabindex", "0"), this.container.appendChild(this.map), this.el.appendChild(this.container), this.nodes = V.createElement("me-nodes"), this.nodes.className = "main-node-container", this.lines = W("lines"), this.summarySvg = W("summary"), this.linkController = W("linkcontroller"), this.P2 = V.createElement("div"), this.P3 = V.createElement("div"), this.P2.className = this.P3.className = "circle", this.P2.style.display = this.P3.style.display = "none", this.line1 = de(), this.line2 = de(), this.linkController.appendChild(this.line1), this.linkController.appendChild(this.line2), this.linkSvgGroup = W("topiclinks"), this.alignment = v ?? "root", this.map.appendChild(this.nodes), this.overflowHidden ? this.container.style.overflow = "hidden" : ke(this);
 }
 $.prototype = dn;
 $.LEFT = R;

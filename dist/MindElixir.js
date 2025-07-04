@@ -435,7 +435,7 @@ const ut = function(e) {
     t.appendChild(Fe(E, w, "2"));
     const b = g.children[1];
     if (b) {
-      if (b.style.bottom = -(b.offsetHeight / 2) + "px", s === L.LHS ? b.style.left = "10px" : s === L.RHS && (b.style.right = "10px"), !b.expanded)
+      if (b.style.bottom = (b.parentNode.offsetHeight - b.offsetHeight) / 2 + "px", s === L.LHS ? b.style.left = "10px" : s === L.RHS && (b.style.right = "10px"), !b.expanded)
         continue;
     } else
       continue;
@@ -2372,11 +2372,11 @@ function po({ pT: e, pL: t, pW: n, pH: o, cT: s, cL: i, cW: r, cH: c, direction:
 function mo({ pT: e, pL: t, pW: n, pH: o, cT: s, cL: i, cW: r, cH: c, direction: l, isFirst: d }) {
   const a = parseInt(this.container.style.getPropertyValue("--gap"));
   let u = 0, h = 0;
-  d ? u = e + o / 2 : u = e + o;
-  const p = s + c;
+  u = e + o / 2;
+  const p = s + c / 2;
   let g = 0, v = 0, m = 0;
   const f = Math.abs(u - p) / 300 * a;
-  return l === L.LHS ? (m = t, g = m + a, v = m - a, h = i + a, `M ${g} ${u} C ${m} ${u} ${m + f} ${p} ${v} ${p} H ${h}`) : (m = t + n, g = m - a, v = m + a, h = i + r - a, `M ${g} ${u} C ${m} ${u} ${m - f} ${p} ${v} ${p} H ${h}`);
+  return l === L.LHS ? (m = t, g = m + a + f, v = m - a - f, h = i + r - a, `M ${g} ${u} C ${m} ${u} ${m + f} ${p} ${v} ${p} H ${h}`) : (m = t + n, g = m - a, v = m + a, h = i + a, `M ${g} ${u} C ${m} ${u} ${m - f} ${p} ${v} ${p} H ${h}`);
 }
 const go = "4.6.1", G = document;
 function D({
