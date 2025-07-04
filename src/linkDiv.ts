@@ -23,8 +23,8 @@ const linkDiv = function (this: MindElixirInstance, mainNode?: Wrapper) {
   const pW = root.offsetWidth
   const pH = root.offsetHeight
 
-  const nodes = this.map.querySelector("me-nodes");
-  const nw = (nodes as HTMLElement).offsetWidth;
+  const nodes = this.map.querySelector('me-nodes')
+  const nw = (nodes as HTMLElement).offsetWidth
 
   // pin center
   this.nodes.style.top = `${10000 - this.nodes.offsetHeight / 2}px`
@@ -115,7 +115,7 @@ const traverseChildren = function (
     const expander = childP.children[1]
 
     if (expander) {
-      expander.style.bottom = -(expander.offsetHeight / 2) + 'px'
+      expander.style.bottom = (expander.parentNode.offsetHeight - expander.offsetHeight) / 2 + 'px'
       if (direction === DirectionClass.LHS) {
         expander.style.left = 10 + 'px'
       } else if (direction === DirectionClass.RHS) {
