@@ -413,7 +413,7 @@ const qe = function(e) {
     t.appendChild(Se(y, E, "2"));
     const b = m.children[1];
     if (b) {
-      if (b.style.bottom = (b.parentNode.offsetHeight - b.offsetHeight) / 2 + "px", s === T.LHS ? b.style.left = "10px" : s === T.RHS && (b.style.right = "10px"), !b.expanded)
+      if (b.style.bottom = (b.parentNode.offsetHeight - b.offsetHeight) / 2 + "px", s === T.LHS ? b.style.left = "20px" : s === T.RHS && (b.style.right = "20px"), !b.expanded)
         continue;
     } else
       continue;
@@ -1569,13 +1569,13 @@ function un({ pT: e, pL: t, pW: n, pH: o, cT: s, cL: i, cW: r, cH: l, direction:
 function fn({ pT: e, pL: t, pW: n, pH: o, cT: s, cL: i, cW: r, cH: l, direction: c, isFirst: d }) {
   const a = parseInt(this.container.style.getPropertyValue("--gap"));
   let u = 0, h = 0;
-  u = e + o / 2;
-  const p = s + l / 2;
+  d ? u = e + o / 2 : u = e + o;
+  const p = s + l;
   let m = 0, g = 0, f = 0;
   const v = Math.abs(u - p) / 300 * a;
-  return c === T.LHS ? (f = t, m = f + a + v, g = f - a - v, h = i + r - a, `M ${m} ${u} C ${f} ${u} ${f + v} ${p} ${g} ${p} H ${h}`) : (f = t + n, m = f - a, g = f + a, h = i + a, `M ${m} ${u} C ${f} ${u} ${f - v} ${p} ${g} ${p} H ${h}`);
+  return c === T.LHS ? (f = t, m = f + a, g = f - a, h = i + a, `M ${m} ${u} C ${f} ${u} ${f + v} ${p} ${g} ${p} H ${h}`) : (f = t + n, m = f - a, g = f + a, h = i + r - a, `M ${m} ${u} C ${f} ${u} ${f - v} ${p} ${g} ${p} H ${h}`);
 }
-const pn = "4.6.1", V = document;
+const pn = "4.6.3", V = document;
 function $({
   el: e,
   direction: t,

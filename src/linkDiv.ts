@@ -117,9 +117,9 @@ const traverseChildren = function (
     if (expander) {
       expander.style.bottom = (expander.parentNode.offsetHeight - expander.offsetHeight) / 2 + 'px'
       if (direction === DirectionClass.LHS) {
-        expander.style.left = 10 + 'px'
+        expander.style.left = 20 + 'px'
       } else if (direction === DirectionClass.RHS) {
-        expander.style.right = 10 + 'px'
+        expander.style.right = 20 + 'px'
       }
       // this property is added in the layout phase
       if (!expander.expanded) continue
