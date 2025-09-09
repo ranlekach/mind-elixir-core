@@ -2,7 +2,7 @@ import type { Locale } from './i18n'
 import { rmSubline } from './nodeOperation'
 import type { Topic, Wrapper } from './types/dom'
 import type { MindElixirData, MindElixirInstance, NodeObj } from './types/index'
-import { fillParent, getTranslate, setExpand } from './utils/index'
+import { fillParent, getTranslate, setExpand, throttle } from './utils/index'
 
 function collectData(instance: MindElixirInstance) {
   return {
@@ -380,6 +380,59 @@ export const expandNodeAll = function (this: MindElixirInstance, el: Topic, isEx
   const driftY = beforePosition.y - afterPosition.y
 
   this.move(driftX, driftY)
+}
+
+/**
+ * Check if a topic element is visible inside the container viewport.
+ */
+export const isTopicVisible = function (this: MindElixirInstance, tpc: Topic) {
+  const containerRect = this.container.getBoundingClientRect()
+  const rect = tpc.getBoundingClientRect()
+  return !(rect.top > containerRect.bottom || rect.bottom < containerRect.top || rect.left > containerRect.right || rect.right < containerRect.left)
+}
+
+/**
+ * Update expansion state for nodes based on visibility.
+ * - Ensure visible nodes (and their ancestors) are expanded.
+ * - Collapse nodes that are neither visible nor ancestors of visible nodes.
+ */
+export const updateAutoExpand = function (this: MindElixirInstance) {
+  // collect all topic elements
+  const topics = Array.from(this.map.querySelectorAll('me-tpc')) as Topic[]
+
+  // set to track nodes that must remain expanded (visible or ancestor of visible)
+  const mustExpand = new Set<string>()
+
+  for (let i = 0; i < topics.length; i++) {
+    const tpc = topics[i]
+    if (isTopicVisible.call(this, tpc)) {
+      // mark this node and its ancestors
+      let node: any = tpc.nodeObj
+      while (node) {
+        mustExpand.add(node.id)
+        node = node.parent
+      }
+    }
+  }
+
+  // Walk through nodeData and set expanded flags accordingly
+  const setRecursive = (node: any) => {
+    const shouldExpand = mustExpand.has(node.id)
+    // Only set expanded when node has children
+    if (node.children && node.children.length > 0) {
+      node.expanded = shouldExpand
+      for (let i = 0; i < node.children.length; i++) setRecursive(node.children[i])
+    }
+  }
+
+  setRecursive(this.nodeData)
+  // Re-render once after changes
+  this.refresh()
+}
+
+// expose a throttled version for external wiring if needed
+export const updateAutoExpandThrottled = function (this: MindElixirInstance) {
+  return throttle(() => updateAutoExpand.call(this), 150)()
 }
 
 /**

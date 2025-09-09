@@ -1,6 +1,6 @@
 import './index.less'
 import { LEFT, RIGHT, SIDE, DARK_THEME, THEME } from './const'
-import { generateUUID } from './utils/index'
+import { generateUUID, throttle } from './utils/index'
 import initMouseEvent from './mouse'
 import { createBus } from './utils/pubsub'
 import { findEle } from './utils/dom'
@@ -44,6 +44,7 @@ function MindElixir(
     markdown,
     imageProxy,
     selectionDisabled,
+    autoExpand,
   }: Options
 ): void {
   let ele: HTMLElement | null = null
@@ -81,6 +82,7 @@ function MindElixir(
   this.markdown = markdown || undefined // Custom markdown parser function
   this.imageProxy = imageProxy || undefined // Image proxy function
   this.selectionDisabled = selectionDisabled ?? false
+  this.autoExpand = autoExpand ?? false
   // this.parentMap = {} // deal with large amount of nodes
   this.currentNodes = [] // selected <tpc/> elements
   this.currentArrow = null // the selected link svg element
@@ -128,6 +130,24 @@ function MindElixir(
     this.container.style.overflow = 'hidden'
   } else {
     this.disposable.push(initMouseEvent(this))
+  }
+
+  // Auto-expand wiring: listen to move/scale events and window resize when enabled
+  if (this.autoExpand) {
+    // use the instance method updateAutoExpand (defined in interact.ts)
+    const update = (this as any).updateAutoExpand?.bind(this)
+    const throttled = throttle((() => update && update()) as any, 150)
+    if (this.bus && throttled) {
+      this.bus.addListener('move', throttled)
+      this.bus.addListener('scale', throttled)
+      const onResize = () => throttled()
+      window.addEventListener('resize', onResize)
+      this.disposable.push(() => {
+        this.bus.removeListener('move', throttled)
+        this.bus.removeListener('scale', throttled)
+        window.removeEventListener('resize', onResize)
+      })
+    }
   }
 }
 

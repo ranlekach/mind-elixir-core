@@ -98,6 +98,9 @@ const methods = {
     this.layout()
     this.linkDiv()
     this.toCenter()
+    if (this.autoExpand) {
+      ;(this as any).updateAutoExpand()
+    }
   },
   destroy(this: Partial<MindElixirInstance>) {
     this.disposable!.forEach(fn => fn())

@@ -165,6 +165,11 @@ export interface Options {
    */
   imageProxy?: (url: string) => string
   selectionDisabled?: boolean
+  /**
+   * When true, nodes within the visible viewport will be expanded automatically
+   * and nodes outside the viewport will be collapsed.
+   */
+  autoExpand?: boolean
 }
 
 export type Uid = string
