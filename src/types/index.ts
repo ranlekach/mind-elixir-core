@@ -180,6 +180,8 @@ export interface Options {
    * and nodes outside the viewport will be collapsed.
    */
   autoExpand?: boolean
+  /** Throttle interval (ms) for auto-expand updates when reacting to move/scale events. */
+  autoExpandThrottleMs?: number
 }
 
 export type Uid = string

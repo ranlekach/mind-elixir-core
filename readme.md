@@ -198,6 +198,30 @@ const data = MindElixir.new('new topic')
 // or the data return from `.getData()`
 mind.init(data)
 
+#### Auto expand throttle option
+
+If you enable the `autoExpand` option, you can control how frequently the library reacts to pan/zoom/resize events via `autoExpandThrottleMs` (milliseconds). The value is clamped to a safe range to avoid too-frequent updates or overly sluggish behavior.
+
+- Default: 150 ms
+- Minimum allowed: 20 ms (very responsive, high CPU cost)
+- Maximum allowed: 1000 ms (low CPU cost, less responsive)
+
+Recommended ranges:
+- 80–150 ms — responsive on desktop and modern devices (good default)
+- 150–300 ms — conservative, better for low-power devices
+- >= 500 ms — only when CPU usage must be minimized
+
+Example:
+
+```js
+const mind = new MindElixir({
+  el: '#map',
+  autoExpand: true,
+  autoExpandThrottleMs: 100, // recommended for desktop
+})
+mind.init(data)
+```
+
 // get a node
 MindElixir.E('node-id')
 ```

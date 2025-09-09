@@ -45,6 +45,7 @@ function MindElixir(
     imageProxy,
     selectionDisabled,
     autoExpand,
+    autoExpandThrottleMs,
   }: Options
 ): void {
   let ele: HTMLElement | null = null
@@ -136,8 +137,12 @@ function MindElixir(
 
   // Auto-expand wiring: listen to move/scale events and window resize when enabled
   if (this.autoExpand) {
+    // clamp throttle ms to reasonable bounds and get the handler
+    const minMs = 20
+    const maxMs = 1000
+    const ms = Math.min(maxMs, Math.max(minMs, autoExpandThrottleMs ?? 150))
     // use the instance helper to get a stable throttled handler
-    const handler = (this as any).getAutoExpandHandler ? (this as any).getAutoExpandHandler() : null
+    const handler = (this as any).getAutoExpandHandler ? (this as any).getAutoExpandHandler(ms) : null
     if (this.bus && handler) {
       this.bus.addListener('move', handler)
       this.bus.addListener('scale', handler)
