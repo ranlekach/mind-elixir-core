@@ -46,6 +46,7 @@ function MindElixir(
     selectionDisabled,
     autoExpand,
     autoExpandThrottleMs,
+    dragBoundPadding,
   }: Options
 ): void {
   let ele: HTMLElement | null = null
@@ -84,6 +85,7 @@ function MindElixir(
   this.imageProxy = imageProxy || undefined // Image proxy function
   this.selectionDisabled = selectionDisabled ?? false
   this.autoExpand = autoExpand ?? false
+  this.dragBoundPadding = dragBoundPadding ?? 100
   // this.parentMap = {} // deal with large amount of nodes
   this.currentNodes = [] // selected <tpc/> elements
   this.persistentSelectedIds = new Set()

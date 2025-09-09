@@ -182,6 +182,8 @@ export interface Options {
   autoExpand?: boolean
   /** Throttle interval (ms) for auto-expand updates when reacting to move/scale events. */
   autoExpandThrottleMs?: number
+  /** When dragging, allow the map to be moved outside container by at most this padding (px). */
+  dragBoundPadding?: number
 }
 
 export type Uid = string
