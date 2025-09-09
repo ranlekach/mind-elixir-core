@@ -122,11 +122,10 @@ export const createWrapper = function (this: MindElixirInstance, nodeObj: NodeOb
   if (!omitChildren && nodeObj.children && nodeObj.children.length > 0) {
     const expander = createExpander(nodeObj.expanded)
     p.appendChild(expander)
-    // tpc.expander = expander
-    if (nodeObj.expanded !== false) {
-      const children = layoutChildren(this, nodeObj.children)
-      grp.appendChild(children)
-    }
+    // Always create children container so collapsed nodes remain in DOM; hide when collapsed
+    const children = layoutChildren(this, nodeObj.children)
+    if (nodeObj.expanded === false) children.style.display = 'none'
+    grp.appendChild(children)
   }
   return { grp, top: p, tpc }
 }

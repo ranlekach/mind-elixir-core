@@ -73,6 +73,10 @@ export default function (mei: MindElixirInstance) {
             el.className = 'selected'
           }
           mei.currentNodes = [...mei.currentNodes, ...(added as Topic[])]
+          // persist selection so node remains logically selected even when collapsed
+          for (const el of added as Topic[]) {
+            mei.persistentSelectedIds.add(el.nodeObj.id)
+          }
           mei.bus.fire(
             'selectNodes',
             (added as Topic[]).map(el => el.nodeObj)
@@ -83,6 +87,10 @@ export default function (mei: MindElixirInstance) {
             el.classList.remove('selected')
           }
           mei.currentNodes = mei.currentNodes!.filter(el => !removed?.includes(el))
+          // explicit unselect: remove from persistent set
+          for (const el of removed as Topic[]) {
+            mei.persistentSelectedIds.delete(el.nodeObj.id)
+          }
           mei.bus.fire(
             'unselectNodes',
             (removed as Topic[]).map(el => el.nodeObj)

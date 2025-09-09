@@ -326,22 +326,39 @@ export const expandNode = function (this: MindElixirInstance, el: Topic, isExpan
   }
 
   const parent = el.parentNode
-  const expander = parent.children[1]!
-  expander.expanded = node.expanded
-  expander.className = node.expanded ? 'minus' : ''
+  const expander = (parent && parent.children && parent.children[1]) as any | undefined
+  if (expander) {
+    expander.expanded = node.expanded
+    expander.className = node.expanded ? 'minus' : ''
+  }
 
-  rmSubline(el)
+  // children container is expected to be parent.parentNode.children[1]
+  const childrenContainer = parent && parent.parentNode && (parent.parentNode.children[1] as HTMLElement | undefined)
+
   if (node.expanded) {
-    const children = this.createChildren(
-      node.children!.map(child => {
-        const wrapper = this.createWrapper(child)
-        return wrapper.grp
-      })
-    )
-    parent.parentNode.appendChild(children)
+    // expanding: if container exists, just show it; otherwise create and append
+    if (childrenContainer) {
+      childrenContainer.style.display = ''
+    } else if (node.children && node.children.length > 0 && parent && parent.parentNode) {
+      const children = this.createChildren(
+        node.children.map(child => {
+          const wrapper = this.createWrapper(child)
+          return wrapper.grp
+        })
+      )
+      parent.parentNode.appendChild(children)
+    }
   } else {
-    const children = parent.parentNode.children[1]
-    children.remove()
+    // collapsing: hide container if exists
+    if (childrenContainer) {
+      childrenContainer.style.display = 'none'
+    }
+    // remove sublines to keep visuals clean
+    try {
+      rmSubline(el)
+    } catch (e) {
+      // ignore
+    }
   }
 
   this.linkDiv(el.closest('me-main > me-wrapper') as Wrapper)
@@ -397,16 +414,16 @@ export const isTopicVisible = function (this: MindElixirInstance, tpc: Topic) {
  * - Collapse nodes that are neither visible nor ancestors of visible nodes.
  */
 export const updateAutoExpand = function (this: MindElixirInstance) {
-  // collect all topic elements
+  // prevent re-entrancy (move -> updateAutoExpand -> move loop)
+  if (this._autoExpanding) return
+  this._autoExpanding = true
+  // Surgical update: expand/collapse only nodes that changed, update DOM directly
   const topics = Array.from(this.map.querySelectorAll('me-tpc')) as Topic[]
-
-  // set to track nodes that must remain expanded (visible or ancestor of visible)
   const mustExpand = new Set<string>()
 
   for (let i = 0; i < topics.length; i++) {
     const tpc = topics[i]
     if (isTopicVisible.call(this, tpc)) {
-      // mark this node and its ancestors
       let node: any = tpc.nodeObj
       while (node) {
         mustExpand.add(node.id)
@@ -415,24 +432,129 @@ export const updateAutoExpand = function (this: MindElixirInstance) {
     }
   }
 
-  // Walk through nodeData and set expanded flags accordingly
-  const setRecursive = (node: any) => {
-    const shouldExpand = mustExpand.has(node.id)
-    // Only set expanded when node has children
-    if (node.children && node.children.length > 0) {
-      node.expanded = shouldExpand
-      for (let i = 0; i < node.children.length; i++) setRecursive(node.children[i])
+  // preserve logically selected ids (persistent selection) so selection survives collapse
+  const selectedIds = Array.from(this.persistentSelectedIds || [])
+
+  // pick a stable reference element (root) to compute drift compensation once
+  let rootEle: Topic | null = null
+  try {
+    rootEle = this.findEle(this.nodeData.id) as Topic
+  } catch (e) {
+    rootEle = this.map.querySelector('me-root me-tpc') as Topic
+  }
+  const beforePosition = rootEle ? rootEle.getBoundingClientRect() : null
+
+  // perform DOM updates for nodes with children only
+  for (let i = 0; i < topics.length; i++) {
+    const tpc = topics[i]
+    const node = tpc.nodeObj
+    if (!node.children || node.children.length === 0) continue
+    const desired = mustExpand.has(node.id)
+    const current = node.expanded !== false
+    if (desired === current) continue
+
+    // update model
+    node.expanded = desired
+
+    const parent = tpc.parentNode as HTMLElement
+    const expander = parent.children[1] as any
+    if (expander) {
+      expander.expanded = desired
+      expander.className = desired ? 'minus' : ''
+    }
+
+    // locate children container (may exist from initial render)
+    const childrenContainer = parent.parentNode ? (parent.parentNode.children[1] as HTMLElement | undefined) : undefined
+    if (childrenContainer) {
+      // if desired, show; otherwise hide but keep in DOM
+      childrenContainer.style.display = desired ? '' : 'none'
+      // propagate persistent selection state into the subtree so hidden nodes keep the selected class
+      try {
+        const tpcsInSub = Array.from(childrenContainer.querySelectorAll('me-tpc')) as Topic[]
+        for (let j = 0; j < tpcsInSub.length; j++) {
+          const subTpc = tpcsInSub[j]
+          if (this.persistentSelectedIds && this.persistentSelectedIds.has(subTpc.nodeObj.id)) {
+            subTpc.classList.add('selected')
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+      // if hiding, also remove any sublines to keep visuals clean
+      if (!desired) {
+        try {
+          rmSubline(tpc)
+        } catch (e) {
+          // ignore
+        }
+      }
+    } else if (desired) {
+      // defensive: create children if missing and we want them visible
+      const children = this.createChildren(
+        node.children.map((child: any) => {
+          const wrapper = this.createWrapper(child)
+          return wrapper.grp
+        })
+      )
+      if (parent.parentNode) parent.parentNode.appendChild(children)
+    }
+
+    // notify listeners for this node change
+    this.bus.fire('expandNode', node)
+  }
+
+  // update links once
+  this.linkDiv()
+
+  // compensate drift once using root element
+  if (rootEle && beforePosition) {
+    const afterRect = rootEle.getBoundingClientRect()
+    const driftX = beforePosition.left - afterRect.left
+    const driftY = beforePosition.top - afterRect.top
+    if (driftX !== 0 || driftY !== 0) {
+      // perform compensation without triggering nested auto-expand handlers
+      try {
+        this.move(driftX, driftY)
+      } finally {
+        // noop here; flag will be reset at the end
+      }
     }
   }
 
-  setRecursive(this.nodeData)
-  // Re-render once after changes
-  this.refresh()
+  // restore selection (if any of the previously selected nodes still exist)
+  try {
+    const reselect: Topic[] = []
+    for (let i = 0; i < selectedIds.length; i++) {
+      try {
+        const t = this.findEle(selectedIds[i])
+        if (t) reselect.push(t)
+      } catch (e) {
+        // node not found (still collapsed) — ignore for now
+      }
+    }
+    if (reselect.length) {
+      // selectNodes will update selection DOM and currentNodes
+      this.selectNodes(reselect)
+    }
+  } catch (e) {
+    // ignore selection restore errors
+  }
+  // release re-entrancy guard
+  this._autoExpanding = false
 }
 
 // expose a throttled version for external wiring if needed
-export const updateAutoExpandThrottled = function (this: MindElixirInstance) {
-  return throttle(() => updateAutoExpand.call(this), 150)()
+/**
+ * Return a stable, throttled handler bound to this instance for wiring into events.
+ * The returned function reference is stored on the instance as `_autoExpandHandler` so
+ * addListener/removeListener can use the same function reference.
+ */
+export const getAutoExpandHandler = function (this: MindElixirInstance, ms = 150) {
+  const key = '_autoExpandHandler'
+  if ((this as any)[key]) return (this as any)[key]
+  const handler = throttle(() => updateAutoExpand.call(this), ms)
+  ;(this as any)[key] = handler
+  return handler
 }
 
 /**

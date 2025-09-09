@@ -85,6 +85,8 @@ function MindElixir(
   this.autoExpand = autoExpand ?? false
   // this.parentMap = {} // deal with large amount of nodes
   this.currentNodes = [] // selected <tpc/> elements
+  this.persistentSelectedIds = new Set()
+  this._autoExpanding = false
   this.currentArrow = null // the selected link svg element
   this.scaleVal = 1
   this.tempDirection = null
@@ -134,18 +136,18 @@ function MindElixir(
 
   // Auto-expand wiring: listen to move/scale events and window resize when enabled
   if (this.autoExpand) {
-    // use the instance method updateAutoExpand (defined in interact.ts)
-    const update = (this as any).updateAutoExpand?.bind(this)
-    const throttled = throttle((() => update && update()) as any, 150)
-    if (this.bus && throttled) {
-      this.bus.addListener('move', throttled)
-      this.bus.addListener('scale', throttled)
-      const onResize = () => throttled()
+    // use the instance helper to get a stable throttled handler
+    const handler = (this as any).getAutoExpandHandler ? (this as any).getAutoExpandHandler() : null
+    if (this.bus && handler) {
+      this.bus.addListener('move', handler)
+      this.bus.addListener('scale', handler)
+      const onResize = () => handler()
       window.addEventListener('resize', onResize)
       this.disposable.push(() => {
-        this.bus.removeListener('move', throttled)
-        this.bus.removeListener('scale', throttled)
+        this.bus.removeListener('move', handler)
+        this.bus.removeListener('scale', handler)
         window.removeEventListener('resize', onResize)
+        ;(this as any)._autoExpandHandler = undefined
       })
     }
   }

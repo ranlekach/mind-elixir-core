@@ -122,6 +122,16 @@ export interface MindElixirInstance extends Omit<Required<Options>, 'markdown' |
 
   selection: SelectionArea
   dragMoveHelper: ReturnType<typeof createDragMoveHelper>
+  /**
+   * IDs of nodes the user has selected and wishes to keep selected even if they are
+   * temporarily removed from the DOM (e.g., due to auto-collapse). Elements are
+   * reselected when they reappear in the DOM.
+   */
+  persistentSelectedIds: Set<string>
+  /**
+   * Internal flag to avoid re-entrancy during auto-expand (prevents recursive updates).
+   */
+  _autoExpanding?: boolean
 }
 type PathString = string
 /**
