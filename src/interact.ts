@@ -37,7 +37,14 @@ export const selectNode = function (this: MindElixirInstance, tpc: Topic, isNewN
   // selectNode clears all selected nodes by default
   this.clearSelection()
   this.scrollIntoView(tpc)
-  this.selection.select(tpc)
+  if (this.selection && typeof (this.selection as any).select === 'function') {
+    this.selection.select(tpc)
+  } else {
+    // fallback: update DOM/class and currentNodes
+    tpc.classList.add('selected')
+    this.currentNodes = [tpc]
+    this.bus.fire('selectNodes', [tpc.nodeObj])
+  }
   if (isNewNode) {
     this.bus.fire('selectNewNode', tpc.nodeObj)
   }
@@ -45,11 +52,29 @@ export const selectNode = function (this: MindElixirInstance, tpc: Topic, isNewN
 
 export const selectNodes = function (this: MindElixirInstance, tpc: Topic[]): void {
   // update currentNodes in selection.ts to keep sync with SelectionArea cache
-  this.selection.select(tpc)
+  if (this.selection && typeof (this.selection as any).select === 'function') {
+    this.selection.select(tpc)
+  } else {
+    for (const el of tpc) el.classList.add('selected')
+    this.currentNodes = tpc.slice()
+    this.bus.fire(
+      'selectNodes',
+      tpc.map(el => el.nodeObj)
+    )
+  }
 }
 
 export const unselectNodes = function (this: MindElixirInstance, tpc: Topic[]) {
-  this.selection.deselect(tpc)
+  if (this.selection && typeof (this.selection as any).deselect === 'function') {
+    this.selection.deselect(tpc)
+  } else {
+    for (const el of tpc) el.classList.remove('selected')
+    this.currentNodes = this.currentNodes?.filter(el => !tpc.includes(el)) || []
+    this.bus.fire(
+      'unselectNodes',
+      tpc.map(el => el.nodeObj)
+    )
+  }
 }
 
 export const clearSelection = function (this: MindElixirInstance) {
