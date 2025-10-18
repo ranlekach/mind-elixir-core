@@ -112,6 +112,8 @@ https://mind-elixir.com/
 
 https://docs.mind-elixir.com/
 
+* Incremental API docs: `readme/incremental-api.md`
+
 ## Usage
 
 ### Install
