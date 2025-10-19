@@ -301,6 +301,7 @@ export const moveNodeAfter = function (this: MindElixirInstance, from: Topic[], 
 }
 
 export const beginEdit = function (this: MindElixirInstance, el?: Topic) {
+  if (!this.editable) return
   const nodeEle = el || this.currentNode
   if (!nodeEle) return
   if (nodeEle.nodeObj.dangerouslySetInnerHTML) return
