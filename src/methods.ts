@@ -17,6 +17,7 @@ import * as nodeOperation from './nodeOperation'
 import * as arrow from './arrow'
 import * as summary from './summary'
 import * as exportImage from './plugin/exportImage'
+import * as levelOfDetail from './utils/levelOfDetail'
 
 export type OperationMap = typeof nodeOperation
 export type Operations = keyof OperationMap
@@ -343,6 +344,7 @@ const methods = {
   },
   ...summary,
   ...exportImage,
+  ...levelOfDetail,
   /**
    * Force recompute of layout and links. Debounced to avoid thrash.
    * options?: { animate?: boolean }
