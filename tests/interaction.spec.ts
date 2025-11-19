@@ -107,7 +107,6 @@ test('Zoomed-out view hides deep nodes', async ({ page }) => {
     const instance = (window as any)['#map']
     instance.scale(0.32)
   })
-  await expect(page.locator('[data-nodeid="memiddle"]')).toHaveClass(/lod-fading|lod-promoted/)
   await expect(page.locator('[data-nodeid="mechild"]')).toHaveClass(/lod-hidden/)
   await expect(page.locator('[data-nodeid="memiddle"]')).toHaveClass(/lod-promoted/)
 })

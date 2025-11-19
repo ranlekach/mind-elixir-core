@@ -333,14 +333,13 @@ const mind = new MindElixir({
       { scale: 0.38, depth: 2 },
       { scale: 0, depth: 1 },
     ],
-    promotionBoost: 0.3, // max extra scale applied to aggregated parents
-    fadeDepthBuffer: 1, // keep one extra depth level semi-transparent before hiding
+  promotionBoost: 0.3, // max extra scale applied to aggregated parents
   },
 })
 ```
 
 `depthStops` are processed from top to bottom; the first entry whose `scale` is less than or equal to the current zoom selects how deep nodes remain visible.
-Nodes just beyond the active stop enter a `lod-fading` state (semi-transparent) for `fadeDepthBuffer` levels before picking up `lod-hidden`, and their parent gets a `lod-promoted` class (with `--lod-promote-scale` applied) so you can highlight that branch as you zoom back in.
+Any node deeper than the active stop fades out, and its parent gets a `lod-promoted` class (with `--lod-promote-scale` applied) so you can highlight that branch as you zoom back in.
 
 
 ### Operation Guards

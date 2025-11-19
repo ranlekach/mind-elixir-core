@@ -2,16 +2,15 @@ import type { Topic, Wrapper } from '../types/dom'
 import type { MindElixirInstance, ZoomDetailStop } from '../types'
 
 const HIDDEN_CLASS = 'lod-hidden'
-const FADING_CLASS = 'lod-fading'
 const PROMOTED_CLASS = 'lod-promoted'
 export const DEFAULT_PROMOTION_BOOST = 0.3
 
 export const DEFAULT_ZOOM_DETAIL_STOPS: ZoomDetailStop[] = [
   { scale: 0.95, depth: Infinity },
-  { scale: 0.8, depth: 6 },
-  { scale: 0.65, depth: 4 },
-  { scale: 0.5, depth: 3 },
-  { scale: 0.38, depth: 2 },
+  { scale: 0.85, depth: 6 },
+  { scale: 0.72, depth: 4 },
+  { scale: 0.58, depth: 3 },
+  { scale: 0.45, depth: 2 },
   { scale: 0, depth: 1 },
 ]
 
@@ -48,33 +47,22 @@ const resolveParentTopic = (wrapper: Wrapper, instance: MindElixirInstance): Top
   return null
 }
 
-type VisibilityState = 'visible' | 'fading' | 'hidden'
-
-const applyTopicState = (wrapper: Wrapper, topic: Topic, state: VisibilityState) => {
-  const isHidden = state === 'hidden'
-  const isFading = state === 'fading'
-  wrapper.classList.toggle(HIDDEN_CLASS, isHidden)
-  wrapper.classList.toggle(FADING_CLASS, isFading)
-  topic.classList.toggle(HIDDEN_CLASS, isHidden)
-  topic.classList.toggle(FADING_CLASS, isFading)
+const toggleTopicVisibility = (wrapper: Wrapper, topic: Topic, hidden: boolean) => {
+  wrapper.classList.toggle(HIDDEN_CLASS, hidden)
+  topic.classList.toggle(HIDDEN_CLASS, hidden)
 }
 
 const resetLevelOfDetail = (instance: MindElixirInstance) => {
   if (!instance.map) return
-  const hidden = instance.map.querySelectorAll<HTMLElement>(`.${HIDDEN_CLASS}`)
-  hidden.forEach(el => el.classList.remove(HIDDEN_CLASS))
-  const fading = instance.map.querySelectorAll<HTMLElement>(`.${FADING_CLASS}`)
-  fading.forEach(el => el.classList.remove(FADING_CLASS))
+  const elements = instance.map.querySelectorAll<HTMLElement>(`.${HIDDEN_CLASS}`)
+  elements.forEach(el => el.classList.remove(HIDDEN_CLASS))
   const promoted = instance.map.querySelectorAll<HTMLElement>(`me-tpc.${PROMOTED_CLASS}`)
   promoted.forEach(el => {
     el.classList.remove(PROMOTED_CLASS)
     el.style.removeProperty('--lod-promote-scale')
   })
-  const hiddenPaths = instance.map.querySelectorAll<SVGPathElement>(`path.${HIDDEN_CLASS}, path.${FADING_CLASS}`)
-  hiddenPaths.forEach(path => {
-    path.classList.remove(HIDDEN_CLASS)
-    path.classList.remove(FADING_CLASS)
-  })
+  const hiddenPaths = instance.map.querySelectorAll<SVGPathElement>(`path.${HIDDEN_CLASS}`)
+  hiddenPaths.forEach(path => path.classList.remove(HIDDEN_CLASS))
 }
 
 const applyPromotionState = (instance: MindElixirInstance, targets: Set<string>, depthLimit: number) => {
@@ -100,14 +88,12 @@ const computePromotionScale = (instance: MindElixirInstance) => {
   return 1 + normalized * boost
 }
 
-const applyConnectorState = (instance: MindElixirInstance, depthLimit: number, fadeDepth: number) => {
+const toggleConnectorVisibility = (instance: MindElixirInstance, depthLimit: number) => {
   const connectors = instance.map.querySelectorAll<SVGPathElement>('path[data-node-depth]')
   connectors.forEach(connector => {
     const depth = Number(connector.dataset.nodeDepth ?? '0')
-    const hidden = Number.isFinite(fadeDepth) && depth > fadeDepth
-    const fading = !hidden && Number.isFinite(depthLimit) && depth > depthLimit
+    const hidden = Number.isFinite(depthLimit) && depth > depthLimit
     connector.classList.toggle(HIDDEN_CLASS, hidden)
-    connector.classList.toggle(FADING_CLASS, fading)
   })
 }
 
@@ -122,24 +108,21 @@ export const applyLevelOfDetail = function (this: MindElixirInstance) {
     resetLevelOfDetail(this)
     return
   }
-  const fadeDepth = depthLimit + (this.zoomDetail?.fadeDepthBuffer ?? 0)
   const wrappers = this.nodes.querySelectorAll<Wrapper>('me-wrapper')
   const promoteTargets = new Set<string>()
   wrappers.forEach(wrapper => {
     const topic = wrapper.querySelector<Topic>('me-parent > me-tpc')
     if (!topic) return
     const depth = Number(topic.dataset.depth ?? '0')
-    const hidden = Number.isFinite(fadeDepth) && depth > fadeDepth
-    const fading = !hidden && depth > depthLimit
-    const state: VisibilityState = hidden ? 'hidden' : fading ? 'fading' : 'visible'
-    applyTopicState(wrapper, topic, state)
-    if (depth > depthLimit) {
+    const hidden = depth > depthLimit
+    toggleTopicVisibility(wrapper, topic, hidden)
+    if (hidden) {
       const parentTopic = resolveParentTopic(wrapper, this)
       if (parentTopic) promoteTargets.add(parentTopic.nodeObj.id)
     }
   })
   applyPromotionState(this, promoteTargets, depthLimit)
-  applyConnectorState(this, depthLimit, fadeDepth)
+  toggleConnectorVisibility(this, depthLimit)
 }
 
 export const getActiveDepthLimit = function (this: MindElixirInstance) {

@@ -87,12 +87,10 @@ function MindElixir(
   const sanitizedDepthStops = (zoomDetail?.depthStops?.length ? [...zoomDetail.depthStops] : [...DEFAULT_ZOOM_DETAIL_STOPS]).sort(
     (a, b) => b.scale - a.scale
   )
-  const fadeDepthBuffer = Math.max(0, zoomDetail?.fadeDepthBuffer ?? 1)
   this.zoomDetail = {
     enabled: zoomDetail?.enabled ?? true,
     depthStops: sanitizedDepthStops,
     promotionBoost: zoomDetail?.promotionBoost ?? DEFAULT_PROMOTION_BOOST,
-    fadeDepthBuffer,
   }
   // this.parentMap = {} // deal with large amount of nodes
   this.currentNodes = [] // selected <tpc/> elements

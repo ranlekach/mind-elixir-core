@@ -89,8 +89,6 @@ export interface ZoomDetailOptions {
   depthStops?: ZoomDetailStop[]
   /** Maximum scale boost (e.g. 0.3 -> +30%) applied to promoted nodes. */
   promotionBoost?: number
-  /** Depth levels that linger in a faded state before becoming hidden. */
-  fadeDepthBuffer?: number
 }
 
 /**
