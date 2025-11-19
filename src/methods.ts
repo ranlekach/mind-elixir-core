@@ -7,6 +7,7 @@ import keypressInit from './plugin/keypress'
 import nodeDraggable from './plugin/nodeDraggable'
 import operationHistory from './plugin/operationHistory'
 import toolBar from './plugin/toolBar'
+import zoomIndicator from './plugin/zoomIndicator'
 import selection from './plugin/selection'
 import { editTopic, createWrapper, createParent, createChildren, createTopic, findEle } from './utils/dom'
 import { getObjById, generateNewObj, fillParent, generateUUID } from './utils/index'
@@ -516,6 +517,12 @@ const methods = {
     this.tidyArrow()
     // plugins
     this.toolBar && toolBar(this)
+    if (this.zoomIndicator) {
+      const disposeZoomIndicator = zoomIndicator(this)
+      if (disposeZoomIndicator) {
+        this.disposable.push(disposeZoomIndicator)
+      }
+    }
     if (import.meta.env.MODE !== 'lite') {
       this.keypress && keypressInit(this, this.keypress)
 

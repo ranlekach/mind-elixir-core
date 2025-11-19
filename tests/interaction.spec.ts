@@ -105,8 +105,30 @@ test('Copy and Paste', async ({ page, me }) => {
 test('Zoomed-out view hides deep nodes', async ({ page }) => {
   await page.evaluate(() => {
     const instance = (window as any)['#map']
-    instance.scale(0.32)
+    instance.scaleMin = 0.05
+    instance.scale(0.12)
   })
   await expect(page.locator('[data-nodeid="mechild"]')).toHaveClass(/lod-hidden/)
+  await expect(page.locator('[data-nodeid="memiddle"]')).toHaveClass(/lod-promoted/)
+})
+
+test('Zoom indicator reflects current scale', async ({ page, me }) => {
+  await me.init(data, '#map', { zoomIndicator: true })
+  const indicator = page.locator('.mind-elixir-zoom-indicator__value')
+  await expect(indicator).toHaveText('100%')
+  await page.evaluate(() => {
+    const instance = (window as any)['#map']
+    instance.scale(0.4)
+  })
+  await expect(indicator).toHaveText('40%')
+})
+
+test('Zoomed-out view fades deep nodes before hiding', async ({ page }) => {
+  await page.evaluate(() => {
+    const instance = (window as any)['#map']
+    instance.scale(0.27)
+  })
+  await expect(page.locator('[data-nodeid="mechild"]')).toHaveClass(/lod-fading/)
+  await expect(page.locator('[data-nodeid="mechild"]')).not.toHaveClass(/lod-hidden/)
   await expect(page.locator('[data-nodeid="memiddle"]')).toHaveClass(/lod-promoted/)
 })

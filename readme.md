@@ -163,6 +163,7 @@ let options = {
   direction: MindElixir.LEFT,
   draggable: true, // default true
   toolBar: true, // default true
+  zoomIndicator: false, // default false (set true to show zoom overlay)
   nodeMenu: true, // default true
   keypress: true, // default true
   locale: 'en', // [zh_CN,zh_TW,en,ja,pt,ru] waiting for PRs
@@ -333,13 +334,16 @@ const mind = new MindElixir({
       { scale: 0.38, depth: 2 },
       { scale: 0, depth: 1 },
     ],
-  promotionBoost: 0.3, // max extra scale applied to aggregated parents
+    promotionBoost: 0.3, // max extra scale applied to aggregated parents
+    fadeDepthBuffer: 1, // number of depth levels that fade before hiding
   },
 })
 ```
 
 `depthStops` are processed from top to bottom; the first entry whose `scale` is less than or equal to the current zoom selects how deep nodes remain visible.
-Any node deeper than the active stop fades out, and its parent gets a `lod-promoted` class (with `--lod-promote-scale` applied) so you can highlight that branch as you zoom back in.
+Nodes that exceed the active stop move into a `lod-fading` state for `fadeDepthBuffer` extra depth levels (with the fade intensifying as you keep zooming out) before finally receiving `lod-hidden`. Their parent node gets a `lod-promoted` class (with `--lod-promote-scale` applied) so you can highlight that branch as you zoom back in.
+
+Need to see the current zoom while tuning these stops? Set `zoomIndicator: true` to display a small overlay in the canvas showing the active scale percentage (updates live as you zoom).
 
 
 ### Operation Guards

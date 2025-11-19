@@ -89,6 +89,8 @@ export interface ZoomDetailOptions {
   depthStops?: ZoomDetailStop[]
   /** Maximum scale boost (e.g. 0.3 -> +30%) applied to promoted nodes. */
   promotionBoost?: number
+  /** Number of extra depth levels that fade before fully hiding. */
+  fadeDepthBuffer?: number
 }
 
 /**
@@ -165,6 +167,8 @@ export interface Options {
   editable?: boolean
   contextMenu?: boolean | ContextMenuOption
   toolBar?: boolean
+  /** Show a small overlay with the current zoom scale. */
+  zoomIndicator?: boolean
   keypress?: boolean | KeypressOptions
   mouseSelectionButton?: 0 | 2
   before?: Before

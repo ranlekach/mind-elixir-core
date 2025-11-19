@@ -11,7 +11,7 @@ import { sub, main } from './utils/generateBranch'
 // @ts-expect-error json file
 import { version } from '../package.json'
 import { createDragMoveHelper } from './utils/dragMoveHelper'
-import { DEFAULT_PROMOTION_BOOST, DEFAULT_ZOOM_DETAIL_STOPS } from './utils/levelOfDetail'
+import { DEFAULT_FADE_DEPTH_BUFFER, DEFAULT_PROMOTION_BOOST, DEFAULT_ZOOM_DETAIL_STOPS } from './utils/levelOfDetail'
 import type { Topic } from './docs'
 
 // TODO show up animation
@@ -27,6 +27,7 @@ function MindElixir(
     editable,
     contextMenu,
     toolBar,
+    zoomIndicator,
     keypress,
     mouseSelectionButton,
     selectionContainer,
@@ -67,6 +68,7 @@ function MindElixir(
   this.newTopicName = newTopicName || 'New Node'
   this.contextMenu = contextMenu ?? true
   this.toolBar = toolBar ?? true
+  this.zoomIndicator = zoomIndicator ?? false
   this.keypress = keypress ?? true
   this.mouseSelectionButton = mouseSelectionButton ?? 0
   this.direction = direction ?? 1
@@ -87,10 +89,12 @@ function MindElixir(
   const sanitizedDepthStops = (zoomDetail?.depthStops?.length ? [...zoomDetail.depthStops] : [...DEFAULT_ZOOM_DETAIL_STOPS]).sort(
     (a, b) => b.scale - a.scale
   )
+  const fadeDepthBuffer = Math.max(0, zoomDetail?.fadeDepthBuffer ?? DEFAULT_FADE_DEPTH_BUFFER)
   this.zoomDetail = {
     enabled: zoomDetail?.enabled ?? true,
     depthStops: sanitizedDepthStops,
     promotionBoost: zoomDetail?.promotionBoost ?? DEFAULT_PROMOTION_BOOST,
+    fadeDepthBuffer,
   }
   // this.parentMap = {} // deal with large amount of nodes
   this.currentNodes = [] // selected <tpc/> elements
