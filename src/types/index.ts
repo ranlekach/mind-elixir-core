@@ -67,14 +67,44 @@ export interface KeypressOptions {
   [key: string]: (e: KeyboardEvent) => void
 }
 
+export interface ZoomDetailStop {
+  /**
+   * Minimum scale value (inclusive) where this depth becomes active.
+   */
+  scale: number
+  /**
+   * Maximum depth (0=root) to keep visible when the stop is active.
+   * Use `Infinity` to disable filtering for scales above a threshold.
+   */
+  depth: number
+}
+
+export interface ZoomDetailOptions {
+  /** Enable/disable adaptive detail entirely. */
+  enabled?: boolean
+  /**
+   * Ordered (desc) stops mapping a minimum scale to the deepest level
+   * still rendered. Values greater than the active stop are hidden.
+   */
+  depthStops?: ZoomDetailStop[]
+  /** Maximum scale boost (e.g. 0.3 -> +30%) applied to promoted nodes. */
+  promotionBoost?: number
+  /** Number of extra depth levels that fade before fully hiding. */
+  fadeDepthBuffer?: number
+}
+
 /**
  * The MindElixir instance
  *
  * @public
  */
-export interface MindElixirInstance extends Omit<Required<Options>, 'markdown' | 'imageProxy'>, MindElixirMethods {
+export type ZoomDetailConfig = Required<ZoomDetailOptions> & { depthStops: ZoomDetailStop[] }
+type InstanceOptionDefaults = Omit<Omit<Required<Options>, 'markdown' | 'imageProxy'>, 'zoomDetail'>
+
+export interface MindElixirInstance extends InstanceOptionDefaults, MindElixirMethods {
   markdown?: (markdown: string) => string // Keep markdown as optional
   imageProxy?: (url: string) => string // Keep imageProxy as optional
+  zoomDetail: ZoomDetailConfig
   dragged: Topic[] | null // currently dragged nodes
   el: HTMLElement
   disposable: Array<() => void>
@@ -137,6 +167,8 @@ export interface Options {
   editable?: boolean
   contextMenu?: boolean | ContextMenuOption
   toolBar?: boolean
+  /** Show a small overlay with the current zoom scale. */
+  zoomIndicator?: boolean
   keypress?: boolean | KeypressOptions
   mouseSelectionButton?: 0 | 2
   before?: Before
@@ -152,6 +184,8 @@ export interface Options {
   scaleMin?: number
   scaleMax?: number
   handleWheel?: true | ((e: WheelEvent) => void)
+  /** Configure adaptive detail when zooming out. */
+  zoomDetail?: ZoomDetailOptions
   /**
    * Custom markdown parser function that takes markdown string and returns HTML string
    * If not provided, markdown will be disabled

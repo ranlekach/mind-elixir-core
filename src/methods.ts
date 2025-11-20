@@ -7,6 +7,7 @@ import keypressInit from './plugin/keypress'
 import nodeDraggable from './plugin/nodeDraggable'
 import operationHistory from './plugin/operationHistory'
 import toolBar from './plugin/toolBar'
+import zoomIndicator from './plugin/zoomIndicator'
 import selection from './plugin/selection'
 import { editTopic, createWrapper, createParent, createChildren, createTopic, findEle } from './utils/dom'
 import { getObjById, generateNewObj, fillParent, generateUUID } from './utils/index'
@@ -17,6 +18,7 @@ import * as nodeOperation from './nodeOperation'
 import * as arrow from './arrow'
 import * as summary from './summary'
 import * as exportImage from './plugin/exportImage'
+import * as levelOfDetail from './utils/levelOfDetail'
 
 export type OperationMap = typeof nodeOperation
 export type Operations = keyof OperationMap
@@ -343,6 +345,7 @@ const methods = {
   },
   ...summary,
   ...exportImage,
+  ...levelOfDetail,
   /**
    * Force recompute of layout and links. Debounced to avoid thrash.
    * options?: { animate?: boolean }
@@ -514,6 +517,12 @@ const methods = {
     this.tidyArrow()
     // plugins
     this.toolBar && toolBar(this)
+    if (this.zoomIndicator) {
+      const disposeZoomIndicator = zoomIndicator(this)
+      if (disposeZoomIndicator) {
+        this.disposable.push(disposeZoomIndicator)
+      }
+    }
     if (import.meta.env.MODE !== 'lite') {
       this.keypress && keypressInit(this, this.keypress)
 

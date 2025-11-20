@@ -33,6 +33,16 @@ export const fillParent = (data: NodeObj, parent?: NodeObj) => {
   }
 }
 
+export const getNodeDepth = (node: NodeObj): number => {
+  let depth = 0
+  let current = node.parent
+  while (current) {
+    depth += 1
+    current = current.parent
+  }
+  return depth
+}
+
 export const setExpand = (node: NodeObj, isExpand: boolean, level?: number) => {
   node.expanded = isExpand
   if (node.children) {

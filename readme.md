@@ -163,6 +163,7 @@ let options = {
   direction: MindElixir.LEFT,
   draggable: true, // default true
   toolBar: true, // default true
+  zoomIndicator: false, // default false (set true to show zoom overlay)
   nodeMenu: true, // default true
   keypress: true, // default true
   locale: 'en', // [zh_CN,zh_TW,en,ja,pt,ru] waiting for PRs
@@ -185,6 +186,18 @@ let options = {
     insertSibling(type, obj) {
       return true
     },
+  },
+  zoomDetail: {
+    enabled: true,
+    depthStops: [
+      { scale: 0.95, depth: Infinity }, // show everything when zoomed in
+      { scale: 0.8, depth: 6 },
+      { scale: 0.65, depth: 4 },
+      { scale: 0.5, depth: 3 },
+      { scale: 0.38, depth: 2 },
+      { scale: 0, depth: 1 },
+    ],
+    promotionBoost: 0.3, // how much to scale parents when aggregating
   },
   // Custom markdown parser (optional)
   // markdown: (text) => customMarkdownParser(text), // provide your own markdown parser function
@@ -303,6 +316,35 @@ let mind = new MindElixir({
 ```
 
 For detailed markdown configuration examples, see [docs/markdown-configuration.md](docs/markdown-configuration.md).
+
+### Adaptive zoom detail
+
+When you zoom out, Mind Elixir now hides distant (deep) nodes and slightly enlarges their parents so that the overall structure stays readable.
+This behavior is on by default and can be tuned/disabled via the `zoomDetail` option:
+
+```ts
+const mind = new MindElixir({
+  // ...
+  zoomDetail: {
+    enabled: true,
+    depthStops: [
+      { scale: 0.95, depth: Infinity }, // no filtering when scale >= 0.95
+      { scale: 0.65, depth: 4 },
+      { scale: 0.5, depth: 3 },
+      { scale: 0.38, depth: 2 },
+      { scale: 0, depth: 1 },
+    ],
+    promotionBoost: 0.3, // max extra scale applied to aggregated parents
+    fadeDepthBuffer: 1, // number of depth levels that fade before hiding
+  },
+})
+```
+
+`depthStops` are processed from top to bottom; the first entry whose `scale` is less than or equal to the current zoom selects how deep nodes remain visible.
+Nodes that exceed the active stop move into a `lod-fading` state for `fadeDepthBuffer` extra depth levels (with the fade intensifying as you keep zooming out) before finally receiving `lod-hidden`. Their parent node gets a `lod-promoted` class (with `--lod-promote-scale` applied) so you can highlight that branch as you zoom back in.
+
+Need to see the current zoom while tuning these stops? Set `zoomIndicator: true` to display a small overlay in the canvas showing the active scale percentage (updates live as you zoom).
+
 
 ### Operation Guards
 

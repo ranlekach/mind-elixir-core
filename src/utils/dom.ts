@@ -1,7 +1,7 @@
 import { LEFT } from '../const'
 import type { Topic, Wrapper, Parent, Children, Expander } from '../types/dom'
 import type { MindElixirInstance, NodeObj } from '../types/index'
-import { encodeHTML } from '../utils/index'
+import { encodeHTML, getNodeDepth } from '../utils/index'
 import { layoutChildren } from './layout'
 import { renderMarkdown, hasMarkdownSyntax } from './markdown'
 
@@ -118,6 +118,9 @@ export const shapeTpc = function (this: MindElixirInstance, tpc: Topic, nodeObj:
 export const createWrapper = function (this: MindElixirInstance, nodeObj: NodeObj, omitChildren?: boolean) {
   const grp = $d.createElement('me-wrapper') as Wrapper
   const { p, tpc } = this.createParent(nodeObj)
+  const depth = getNodeDepth(nodeObj)
+  grp.dataset.depth = depth.toString()
+  p.dataset.depth = depth.toString()
   grp.appendChild(p)
   if (!omitChildren && nodeObj.children && nodeObj.children.length > 0) {
     const expander = createExpander(nodeObj.expanded)
@@ -149,6 +152,7 @@ export const createTopic = function (this: MindElixirInstance, nodeObj: NodeObj)
   const topic = $d.createElement('me-tpc') as Topic
   topic.nodeObj = nodeObj
   topic.dataset.nodeid = 'me' + nodeObj.id
+  topic.dataset.depth = getNodeDepth(nodeObj).toString()
   topic.draggable = this.draggable
   return topic
 }

@@ -1,5 +1,5 @@
 import { createPath, createLinkSvg } from './utils/svg'
-import { getOffsetLT } from './utils/index'
+import { getOffsetLT, getNodeDepth } from './utils/index'
 import type { Wrapper, Topic } from './types/dom'
 import type { DirectionClass, MindElixirInstance } from './types/index'
 
@@ -38,7 +38,10 @@ const linkDiv = function (this: MindElixirInstance, mainNode?: Wrapper) {
     const palette = this.theme.palette
     const branchColor = tpc.nodeObj.branchColor || palette[i % palette.length]
     tpc.style.borderColor = branchColor
-    this.lines.appendChild(createPath(mainPath, branchColor, '3'))
+    const connector = createPath(mainPath, branchColor, '3')
+    connector.dataset.nodeId = tpc.nodeObj.id
+    connector.dataset.nodeDepth = tpc.dataset.depth || getNodeDepth(tpc.nodeObj).toString()
+    this.lines.appendChild(connector)
 
     // generate link inside main node
     if (mainNode && mainNode !== el) {
@@ -85,10 +88,14 @@ const traverseChildren = function (
     const cL = childP.offsetLeft
     const cW = childP.offsetWidth
     const cH = childP.offsetHeight
+    const topic = childP.firstChild as Topic
 
-    const bc = childP.firstChild.nodeObj.branchColor || branchColor
+    const bc = topic.nodeObj.branchColor || branchColor
     const path = mei.generateSubBranch({ pT, pL, pW, pH, cT, cL, cW, cH, direction, isFirst })
-    svgContainer.appendChild(createPath(path, bc, '2'))
+    const connector = createPath(path, bc, '2')
+    connector.dataset.nodeId = topic.nodeObj.id
+    connector.dataset.nodeDepth = topic.dataset.depth || getNodeDepth(topic.nodeObj).toString()
+    svgContainer.appendChild(connector)
 
     const expander = childP.children[1]
 
