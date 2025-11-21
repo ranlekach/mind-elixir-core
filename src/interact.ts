@@ -258,7 +258,8 @@ export const toCenter = function (this: MindElixirInstance) {
  * @function
  * @instance
  * @name centerOnSelected
- * @description Center the map on the currently selected node.
+ * @description Center the map on the currently selected node. If the node is hidden due to
+ * level-of-detail zoom settings, automatically zoom in to make it visible.
  * @memberof MapInteraction
  */
 export const centerOnSelected = function (this: MindElixirInstance) {
@@ -269,7 +270,64 @@ export const centerOnSelected = function (this: MindElixirInstance) {
     return
   }
 
-  const { map, container } = this
+  // Check if the node is hidden or fading due to level-of-detail
+  // Check both the topic element and its wrapper parent for LOD classes
+  const wrapper = currentNode.closest('me-wrapper')
+  const isNodeHidden = currentNode.classList.contains('lod-hidden') || wrapper?.classList.contains('lod-hidden')
+  const isNodeFading = currentNode.classList.contains('lod-fading') || wrapper?.classList.contains('lod-fading')
+
+  // Also check computed opacity as a fallback
+  const computedOpacity = window.getComputedStyle(currentNode).opacity
+  const isVisuallyHidden = parseFloat(computedOpacity) < 0.1
+
+  // Determine if we need to zoom in
+  const needsZoom = (isNodeHidden || isNodeFading || isVisuallyHidden) && this.zoomDetail?.enabled
+
+  if (needsZoom) {
+    const nodeDepth = Number(currentNode.dataset.depth ?? '0')
+
+    // Find the appropriate zoom level for this depth
+    const stops = this.zoomDetail.depthStops?.length ? this.zoomDetail.depthStops : []
+    let targetScale = this.scaleMax // Default to max zoom if no suitable stop found
+
+    // Find the first zoom stop where this depth would be visible
+    for (let i = 0; i < stops.length; i++) {
+      const stop = stops[i]
+      if (nodeDepth <= stop.depth) {
+        targetScale = Math.min(stop.scale + 0.05, this.scaleMax) // Add small buffer
+        break
+      }
+    }
+
+    // Zoom in to the target scale first
+    const containerRect = this.container.getBoundingClientRect()
+    const centerOffset = {
+      x: containerRect.left + containerRect.width / 2,
+      y: containerRect.top + containerRect.height / 2,
+    }
+
+    this.scale(targetScale, centerOffset)
+
+    // Give a small delay for the scale to apply and LOD to update
+    setTimeout(() => {
+      this.centerOnSelectedAfterZoom()
+    }, 100)
+  } else {
+    this.centerOnSelectedAfterZoom()
+  }
+}
+
+/**
+ * Internal helper to center on selected node after zoom is applied
+ */
+const centerOnSelectedAfterZoom = function (this: MindElixirInstance) {
+  const currentNode = this.currentNode
+  if (!currentNode) {
+    this.toCenter()
+    return
+  }
+
+  const { container } = this
   const nodeRect = currentNode.getBoundingClientRect()
   const containerRect = container.getBoundingClientRect()
 
@@ -288,6 +346,9 @@ export const centerOnSelected = function (this: MindElixirInstance) {
   // Move the map to center on the selected node
   this.move(-offsetX, -offsetY, true)
 }
+
+// Export the helper so it can be used as a method
+export { centerOnSelectedAfterZoom }
 
 /**
  * @function
