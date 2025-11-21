@@ -257,6 +257,41 @@ export const toCenter = function (this: MindElixirInstance) {
 /**
  * @function
  * @instance
+ * @name centerOnSelected
+ * @description Center the map on the currently selected node.
+ * @memberof MapInteraction
+ */
+export const centerOnSelected = function (this: MindElixirInstance) {
+  const currentNode = this.currentNode
+  if (!currentNode) {
+    // If no node is selected, fall back to regular center
+    this.toCenter()
+    return
+  }
+
+  const { map, container } = this
+  const nodeRect = currentNode.getBoundingClientRect()
+  const containerRect = container.getBoundingClientRect()
+
+  // Calculate the center of the selected node in viewport coordinates
+  const nodeCenterX = nodeRect.left + nodeRect.width / 2
+  const nodeCenterY = nodeRect.top + nodeRect.height / 2
+
+  // Calculate the center of the container
+  const containerCenterX = containerRect.left + containerRect.width / 2
+  const containerCenterY = containerRect.top + containerRect.height / 2
+
+  // Calculate the offset needed to center the node
+  const offsetX = nodeCenterX - containerCenterX
+  const offsetY = nodeCenterY - containerCenterY
+
+  // Move the map to center on the selected node
+  this.move(-offsetX, -offsetY, true)
+}
+
+/**
+ * @function
+ * @instance
  * @name install
  * @description Install plugin.
  * @memberof MapInteraction

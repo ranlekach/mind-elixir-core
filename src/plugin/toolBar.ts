@@ -29,12 +29,25 @@ function createToolBarRBContainer(mind: MindElixirInstance) {
   const toolBarRBContainer = document.createElement('div')
   const fc = createButton('fullscreen', 'full')
   const gc = createButton('toCenter', 'living')
+  const cs = createButton('centerOnSelected', 'living')
   const zo = createButton('zoomout', 'zoomout')
   const zi = createButton('zoomin', 'zoomin')
   const percentage = document.createElement('span')
   percentage.innerText = '100%'
+
+  // Add titles for accessibility and clarity
+  fc.title = 'Toggle Fullscreen'
+  gc.title = 'Center on Root'
+  cs.title = 'Center on Selected Node'
+  zo.title = 'Zoom Out'
+  zi.title = 'Zoom In'
+
+  // Add a visual indicator to distinguish centerOnSelected from toCenter
+  cs.style.opacity = '0.7'
+
   toolBarRBContainer.appendChild(fc)
   toolBarRBContainer.appendChild(gc)
+  toolBarRBContainer.appendChild(cs)
   toolBarRBContainer.appendChild(zo)
   toolBarRBContainer.appendChild(zi)
   // toolBarRBContainer.appendChild(percentage)
@@ -48,6 +61,9 @@ function createToolBarRBContainer(mind: MindElixirInstance) {
   }
   gc.onclick = () => {
     mind.toCenter()
+  }
+  cs.onclick = () => {
+    mind.centerOnSelected()
   }
   zo.onclick = () => {
     mind.scale(mind.scaleVal - mind.scaleSensitivity)
