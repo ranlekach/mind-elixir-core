@@ -34,6 +34,12 @@ const options: Options = {
   // mouseSelectionButton: 2,
   draggable: true,
   editable: true,
+  // Enable minimap
+  minimap: {
+    enabled: true,
+    width: 200,
+    height: 150,
+  },
   // Custom markdown parser (user must provide their own implementation)
   // markdown: (text: string) => {
   //   console.log('md process', text)

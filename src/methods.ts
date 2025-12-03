@@ -8,6 +8,7 @@ import nodeDraggable from './plugin/nodeDraggable'
 import operationHistory from './plugin/operationHistory'
 import toolBar from './plugin/toolBar'
 import zoomIndicator from './plugin/zoomIndicator'
+import minimap from './plugin/minimap'
 import selection from './plugin/selection'
 import { editTopic, createWrapper, createParent, createChildren, createTopic, findEle } from './utils/dom'
 import { getObjById, generateNewObj, fillParent, generateUUID } from './utils/index'
@@ -523,6 +524,12 @@ const methods = {
         this.disposable.push(disposeZoomIndicator)
       }
     }
+    if (this.minimap.enabled) {
+      const disposeMinimap = minimap(this)
+      if (disposeMinimap) {
+        this.disposable.push(disposeMinimap)
+      }
+    }
     if (import.meta.env.MODE !== 'lite') {
       this.keypress && keypressInit(this, this.keypress)
 
@@ -543,6 +550,7 @@ const methods = {
     this.disposable!.forEach(fn => fn())
     if (this.el) this.el.innerHTML = ''
     this.el = undefined
+    this.minimapContainer = undefined
     this.nodeData = undefined
     this.arrows = undefined
     this.summaries = undefined

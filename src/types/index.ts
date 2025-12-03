@@ -99,12 +99,46 @@ export interface ZoomDetailOptions {
  * @public
  */
 export type ZoomDetailConfig = Required<ZoomDetailOptions> & { depthStops: ZoomDetailStop[] }
-type InstanceOptionDefaults = Omit<Omit<Required<Options>, 'markdown' | 'imageProxy'>, 'zoomDetail'>
+export interface MinimapOptions {
+  /** Enable/disable the minimap overlay entirely. */
+  enabled?: boolean
+  /** Fixed width (px) of the minimap container. */
+  width?: number
+  /** Fixed height (px) of the minimap container. */
+  height?: number
+  /** Padding (px) between the rendered map and the minimap frame. */
+  padding?: number
+  /** Whether the minimap is visible immediately after init. */
+  visible?: boolean
+  /** Background fill color for the minimap canvas. */
+  backgroundColor?: string
+  /** Frame color used around the rendered map. */
+  borderColor?: string
+  /** Fill color applied to the live viewport rectangle. */
+  viewportColor?: string
+  /** Border color for the live viewport rectangle. */
+  viewportBorderColor?: string
+}
+
+export type MinimapConfig = {
+  enabled: boolean
+  width: number
+  height: number
+  padding: number
+  visible: boolean
+  backgroundColor: string
+  borderColor: string
+  viewportColor: string
+  viewportBorderColor: string
+}
+
+type InstanceOptionDefaults = Omit<Omit<Omit<Required<Options>, 'markdown' | 'imageProxy'>, 'zoomDetail'>, 'minimap'>
 
 export interface MindElixirInstance extends InstanceOptionDefaults, MindElixirMethods {
   markdown?: (markdown: string) => string // Keep markdown as optional
   imageProxy?: (url: string) => string // Keep imageProxy as optional
   zoomDetail: ZoomDetailConfig
+  minimap: MinimapConfig
   dragged: Topic[] | null // currently dragged nodes
   el: HTMLElement
   disposable: Array<() => void>
@@ -128,6 +162,7 @@ export interface MindElixirInstance extends InstanceOptionDefaults, MindElixirMe
   map: HTMLElement
   root: HTMLElement
   nodes: HTMLElement
+  minimapContainer?: HTMLDivElement
   lines: SVGElement
   summarySvg: SVGElement
   linkController: SVGElement
@@ -186,6 +221,8 @@ export interface Options {
   handleWheel?: true | ((e: WheelEvent) => void)
   /** Configure adaptive detail when zooming out. */
   zoomDetail?: ZoomDetailOptions
+  /** Configure the optional minimap overlay. */
+  minimap?: boolean | MinimapOptions
   /**
    * Custom markdown parser function that takes markdown string and returns HTML string
    * If not provided, markdown will be disabled

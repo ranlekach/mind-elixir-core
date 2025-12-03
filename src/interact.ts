@@ -545,3 +545,50 @@ export const refresh = function (this: MindElixirInstance, data?: MindElixirData
   // generate links between nodes
   this.linkDiv()
 }
+
+/**
+ * @function
+ * @instance
+ * @name showMinimap
+ * @description Show the minimap if it's initialized.
+ * @memberof MapInteraction
+ */
+export const showMinimap = function (this: MindElixirInstance) {
+  if (!this.minimap.enabled) return
+  if (this.minimapContainer) {
+    this.minimapContainer.classList.remove('hidden')
+    this.minimap.visible = true
+  }
+}
+
+/**
+ * @function
+ * @instance
+ * @name hideMinimap
+ * @description Hide the minimap.
+ * @memberof MapInteraction
+ */
+export const hideMinimap = function (this: MindElixirInstance) {
+  if (!this.minimap.enabled) return
+  if (this.minimapContainer) {
+    this.minimapContainer.classList.add('hidden')
+    this.minimap.visible = false
+  }
+}
+
+/**
+ * @function
+ * @instance
+ * @name toggleMinimap
+ * @description Toggle minimap visibility.
+ * @memberof MapInteraction
+ */
+export const toggleMinimap = function (this: MindElixirInstance) {
+  if (this.minimapContainer) {
+    if (this.minimapContainer.classList.contains('hidden')) {
+      this.showMinimap()
+    } else {
+      this.hideMinimap()
+    }
+  }
+}

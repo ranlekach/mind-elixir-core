@@ -1,0 +1,44 @@
+.mind-elixir-minimap {
+  position: absolute;
+  right: 20px;
+  bottom: 96px;
+  width: 200px;
+  height: 150px;
+  border-radius: 8px;
+  background: var(--mind-elixir-minimap-bg, rgba(15, 23, 42, 0.7));
+  border: 1px solid var(--mind-elixir-minimap-border, rgba(255, 255, 255, 0.25));
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 30;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+  }
+
+  .mind-elixir-minimap__canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .mind-elixir-minimap__viewport {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid var(--mind-elixir-minimap-viewport-border, #0f76ff);
+    background-color: var(--mind-elixir-minimap-viewport-fill, rgba(15, 118, 255, 0.32));
+    box-shadow: 0 0 8px rgba(15, 118, 255, 0.45);
+    border-radius: 4px;
+    pointer-events: auto;
+  }
+}

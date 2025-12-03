@@ -345,6 +345,31 @@ Nodes that exceed the active stop move into a `lod-fading` state for `fadeDepthB
 
 Need to see the current zoom while tuning these stops? Set `zoomIndicator: true` to display a small overlay in the canvas showing the active scale percentage (updates live as you zoom).
 
+### Live minimap overlay
+
+Mind Elixir can render a live minimap in the bottom-right corner that mirrors the entire map and highlights the portion currently visible on screen. The minimap reacts instantly to every pan/zoom gesture (mouse, touch, trackpad, keyboard) and can also be used to navigate: drag the blue rectangle or click anywhere inside the minimap to jump there.
+
+```ts
+const mind = new MindElixir({
+  // ...
+  minimap: {
+    enabled: true,       // opt-in (defaults to false)
+    width: 240,          // pixels
+    height: 160,
+    padding: 12,         // inner padding around the rendered map
+    visible: true,       // start shown (mind.hideMinimap() to hide later)
+    viewportColor: 'rgba(10, 132, 255, 0.35)',
+    viewportBorderColor: '#0a84ff',
+  },
+})
+
+mind.hideMinimap()  // programmatically hide
+mind.showMinimap()  // show again
+mind.toggleMinimap()
+```
+
+All color-related properties are optional; if omitted, sensible theme-friendly defaults are used. When the minimap is disabled or hidden it incurs zero runtime cost.
+
 
 ### Operation Guards
 

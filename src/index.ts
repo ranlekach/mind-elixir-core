@@ -48,6 +48,7 @@ function MindElixir(
     selectionDisabled,
     dragBoundPadding,
     zoomDetail,
+    minimap,
   }: Options
 ): void {
   let ele: HTMLElement | null = null
@@ -95,6 +96,21 @@ function MindElixir(
     depthStops: sanitizedDepthStops,
     promotionBoost: zoomDetail?.promotionBoost ?? DEFAULT_PROMOTION_BOOST,
     fadeDepthBuffer,
+  }
+  const minimapOptions = typeof minimap === 'boolean' ? { enabled: minimap } : minimap || {}
+  const minimapWidth = Math.max(80, Math.round(minimapOptions.width ?? 220))
+  const minimapHeight = Math.max(60, Math.round(minimapOptions.height ?? 160))
+  const minimapPadding = Math.max(0, Math.round(minimapOptions.padding ?? 12))
+  this.minimap = {
+    enabled: minimapOptions.enabled ?? false,
+    width: minimapWidth,
+    height: minimapHeight,
+    padding: minimapPadding,
+    visible: minimapOptions.visible ?? true,
+    backgroundColor: minimapOptions.backgroundColor ?? '',
+    borderColor: minimapOptions.borderColor ?? 'rgba(255, 255, 255, 0.2)',
+    viewportColor: minimapOptions.viewportColor ?? 'rgba(15, 118, 255, 0.3)',
+    viewportBorderColor: minimapOptions.viewportBorderColor ?? '#0f76ff',
   }
   // this.parentMap = {} // deal with large amount of nodes
   this.currentNodes = [] // selected <tpc/> elements
