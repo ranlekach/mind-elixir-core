@@ -39,6 +39,30 @@ const ensureMiniStrokeWidth = (baseWidth: number, scale: number) => {
   return Math.max(baseWidth, minWidth)
 }
 
+const parseLength = (value: string, fallback: number, size: number) => {
+  if (!value) return fallback
+  if (value.endsWith('%')) {
+    const percent = parseFloat(value)
+    if (Number.isNaN(percent)) return fallback
+    return (percent / 100) * size
+  }
+  const parsed = parseFloat(value)
+  return Number.isNaN(parsed) ? fallback : parsed
+}
+
+const getTransformOrigin = (el: HTMLElement) => {
+  try {
+    const origin = window.getComputedStyle(el).transformOrigin || '50% 50%'
+    const [ox, oy] = origin.split(' ')
+    return {
+      x: parseLength(ox?.trim() ?? '50%', el.offsetWidth / 2, el.offsetWidth),
+      y: parseLength(oy?.trim() ?? '50%', el.offsetHeight / 2, el.offsetHeight),
+    }
+  } catch (err) {
+    return { x: el.offsetWidth / 2, y: el.offsetHeight / 2 }
+  }
+}
+
 export default function initMinimap(mind: MindElixirInstance) {
   if (!mind.container || !mind.map || !mind.nodes) return
 
@@ -266,10 +290,11 @@ export default function initMinimap(mind: MindElixirInstance) {
     const scale = mind.scaleVal || 1
     const containerWidth = mind.container.clientWidth
     const containerHeight = mind.container.clientHeight
+    const origin = getTransformOrigin(mind.map)
     const viewportWidthWorld = containerWidth / scale
     const viewportHeightWorld = containerHeight / scale
-    const viewportLeftWorld = (0 - translateX) / scale
-    const viewportTopWorld = (0 - translateY) / scale
+    const viewportLeftWorld = (0 - translateX - origin.x) / scale + origin.x
+    const viewportTopWorld = (0 - translateY - origin.y) / scale + origin.y
 
     const relLeft = viewportLeftWorld - contentBounds.left
     const relTop = viewportTopWorld - contentBounds.top
