@@ -118,6 +118,15 @@ export interface MinimapOptions {
   viewportColor?: string
   /** Border color for the live viewport rectangle. */
   viewportBorderColor?: string
+  /** Where to pin the minimap overlay and how far from the edges. */
+  position?: {
+    /** Corner the minimap sticks to. */
+    corner?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+    /** Horizontal offset in px from the chosen corner edge. */
+    offsetX?: number
+    /** Vertical offset in px from the chosen corner edge. */
+    offsetY?: number
+  }
 }
 
 export type MinimapConfig = {
@@ -130,6 +139,9 @@ export type MinimapConfig = {
   borderColor: string
   viewportColor: string
   viewportBorderColor: string
+  corner: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+  offsetX: number
+  offsetY: number
 }
 
 type InstanceOptionDefaults = Omit<Omit<Omit<Required<Options>, 'markdown' | 'imageProxy'>, 'zoomDetail'>, 'minimap'>

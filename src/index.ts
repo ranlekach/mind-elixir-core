@@ -101,6 +101,10 @@ function MindElixir(
   const minimapWidth = Math.max(80, Math.round(minimapOptions.width ?? 220))
   const minimapHeight = Math.max(60, Math.round(minimapOptions.height ?? 160))
   const minimapPadding = Math.max(0, Math.round(minimapOptions.padding ?? 12))
+  const minimapCorner = minimapOptions.position?.corner ?? 'bottom-right'
+  const minimapOffsetX = Math.max(0, Math.round(minimapOptions.position?.offsetX ?? 20))
+  const minimapOffsetYDefault = minimapCorner.startsWith('top') ? 20 : 96
+  const minimapOffsetY = Math.max(0, Math.round(minimapOptions.position?.offsetY ?? minimapOffsetYDefault))
   this.minimap = {
     enabled: minimapOptions.enabled ?? false,
     width: minimapWidth,
@@ -111,6 +115,9 @@ function MindElixir(
     borderColor: minimapOptions.borderColor ?? 'rgba(255, 255, 255, 0.2)',
     viewportColor: minimapOptions.viewportColor ?? 'rgba(15, 118, 255, 0.3)',
     viewportBorderColor: minimapOptions.viewportBorderColor ?? '#0f76ff',
+    corner: minimapCorner,
+    offsetX: minimapOffsetX,
+    offsetY: minimapOffsetY,
   }
   // this.parentMap = {} // deal with large amount of nodes
   this.currentNodes = [] // selected <tpc/> elements

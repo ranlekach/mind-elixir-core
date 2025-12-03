@@ -358,6 +358,11 @@ const mind = new MindElixir({
     height: 160,
     padding: 12,         // inner padding around the rendered map
     visible: true,       // start shown (mind.hideMinimap() to hide later)
+    position: {
+      corner: 'top-right', // TL | TR | BL | BR (default BR)
+      offsetX: 24,
+      offsetY: 24,
+    },
     viewportColor: 'rgba(10, 132, 255, 0.35)',
     viewportBorderColor: '#0a84ff',
   },
@@ -368,7 +373,7 @@ mind.showMinimap()  // show again
 mind.toggleMinimap()
 ```
 
-All color-related properties are optional; if omitted, sensible theme-friendly defaults are used. When the minimap is disabled or hidden it incurs zero runtime cost.
+All color-related properties are optional; if omitted, sensible theme-friendly defaults are used. The `position` block lets you pick any screen corner and specify exact offsets, so the minimap can avoid clashing with your own overlays. When the minimap is disabled or hidden it incurs zero runtime cost.
 
 
 ### Operation Guards

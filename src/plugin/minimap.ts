@@ -53,6 +53,32 @@ export default function initMinimap(mind: MindElixirInstance) {
   container.style.height = `${config.height}px`
   container.style.setProperty('--mind-elixir-minimap-bg', resolveFrameBackground())
   container.style.setProperty('--mind-elixir-minimap-border', config.borderColor)
+  const applyPosition = () => {
+    container.style.top = 'auto'
+    container.style.bottom = 'auto'
+    container.style.left = 'auto'
+    container.style.right = 'auto'
+    switch (config.corner) {
+      case 'top-left':
+        container.style.top = `${config.offsetY}px`
+        container.style.left = `${config.offsetX}px`
+        break
+      case 'top-right':
+        container.style.top = `${config.offsetY}px`
+        container.style.right = `${config.offsetX}px`
+        break
+      case 'bottom-left':
+        container.style.bottom = `${config.offsetY}px`
+        container.style.left = `${config.offsetX}px`
+        break
+      case 'bottom-right':
+      default:
+        container.style.bottom = `${config.offsetY}px`
+        container.style.right = `${config.offsetX}px`
+        break
+    }
+  }
+  applyPosition()
   if (!config.visible) {
     container.classList.add('hidden')
   }
