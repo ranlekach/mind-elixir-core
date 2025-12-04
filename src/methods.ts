@@ -32,7 +32,7 @@ function beforeHook<T extends Operations>(
   fnName: T
 ): (this: MindElixirInstance, ...args: Parameters<OperationMap[T]>) => Promise<void> {
   return async function (this: MindElixirInstance, ...args: Parameters<OperationMap[T]>) {
-    const hook = this.before[fnName]
+    const hook = this.before?.[fnName] as ((...args: Parameters<OperationMap[T]>) => Promise<boolean> | boolean) | undefined
     if (hook) {
       const res = await hook.apply(this, args)
       if (!res) return

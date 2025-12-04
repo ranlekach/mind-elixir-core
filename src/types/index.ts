@@ -16,9 +16,18 @@ export enum DirectionClass {
   RHS = 'rhs',
 }
 
-type Before = Partial<{
+type OperationHooks = Partial<{
   [K in Operations]: (...args: Parameters<OperationMap[K]>) => Promise<boolean> | boolean
 }>
+
+type Before = OperationHooks & {
+  /**
+   * Custom handler for double-click events
+   * Return false to prevent MindElixir's default double-click behavior
+   * Return true to allow MindElixir to handle the event normally
+   */
+  dblClick?: (e: MouseEvent, target: HTMLElement) => boolean
+}
 
 /**
  * MindElixir Theme

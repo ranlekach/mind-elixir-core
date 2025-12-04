@@ -61,8 +61,24 @@ export default function (mind: MindElixirInstance) {
   }
 
   const handleDblClick = (e: MouseEvent) => {
-    if (!mind.editable) return
     const target = e.target as HTMLElement
+
+    // CUSTOM HOOK: Allow app to intercept double-clicks before MindElixir processes them
+    if (mind.before?.dblClick) {
+      try {
+        const shouldContinue = mind.before.dblClick(e, target)
+        if (shouldContinue === false) {
+          e.preventDefault()
+          e.stopPropagation()
+          return // Exit - custom handler takes over
+        }
+      } catch (error) {
+        console.error('[MindElixir] Error in custom dblClick handler:', error)
+        // Continue with default behavior if custom handler fails
+      }
+    }
+
+    if (!mind.editable) return
     if (isTopic(target)) {
       mind.beginEdit(target)
     }
