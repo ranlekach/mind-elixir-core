@@ -1,6 +1,6 @@
 {
   "name": "brainstorm-mind-elixir",
-  "version": "5.2.6",
+  "version": "5.2.62",
   "type": "module",
   "description": "Fork of Mind elixir with some bespoke features",
   "keywords": [
